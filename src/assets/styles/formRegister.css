@@ -1,0 +1,65 @@
+.container-form {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.box-form {
+  width: 40%;
+  display: flex;
+  justify-content: center;
+  margin: 0 10%;
+  border-left: solid 1px;
+}
+
+.form_reg {
+  width: 85%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.textlink {
+  width: 100%;
+  text-align: center;
+  font-size: 0.9rem;
+}
+.link {
+  text-decoration: none;
+  color: #b46c2b;
+}
+
+.buttons {
+  margin: 2.4rem 0 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+.btn {
+  width: 45%;
+  padding: 0.9rem;
+  border-radius: 15px;
+  color: white;
+  background: #b46c2b;
+  border: none;
+}
+
+/* SOLO QUEDA HACER RESPONSIVE LAS ELIPCES Y HACER QUE SE CENTRE CUANDO ES PEQUEÑA LA PANTALLA */
+
+.elipce-superior{
+    position: fixed;
+    top: 0;
+}
+.elipce-inferior {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+
+
+.button-login{
+  margin: 2.8rem 0 1rem;
+  display: flex;
+  justify-content: center;
+}
