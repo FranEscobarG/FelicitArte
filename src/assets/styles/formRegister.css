@@ -43,6 +43,7 @@
   color: white;
   background: #b46c2b;
   border: none;
+  cursor: pointer;
 }
 
 /* SOLO QUEDA HACER RESPONSIVE LAS ELIPCES Y HACER QUE SE CENTRE CUANDO ES PEQUEÑA LA PANTALLA */
@@ -62,4 +63,5 @@
   margin: 2.8rem 0 1rem;
   display: flex;
   justify-content: center;
+  cursor: pointer;
 }
