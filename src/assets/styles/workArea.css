@@ -1,0 +1,31 @@
+.flex-work_area{
+    height: 90vh;
+    display: flex;
+    justify-content: space-between;
+    background-color: rgba(255, 228, 196, 0.217);
+}
+
+.tools-left{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.container-canvas{
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(243, 243, 243, 0.877);
+}
+
+.sample-canvas{
+    width: 600px;
+    height: 90%;
+    background-color: rgb(255, 255, 255);
+}
+
+/* 
+canvas{
+    margin: auto;
+} */
