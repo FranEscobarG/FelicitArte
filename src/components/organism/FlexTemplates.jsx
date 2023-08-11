@@ -1,9 +1,14 @@
-import VerticalMenu from "../molecules/VerticalMenu";
-import '../../assets/styles/flexTemplates.css'
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import VerticalMenu from "../molecules/VerticalMenu";
+import ButtonTemplate from "../atoms/ButtonTemplate";
+import IconPlus from "../../assets/img/iconPlus.svg";
+import AnimalTemplate from "../../assets/img/Animal-Folder.svg";
+import '../../assets/styles/flexTemplates.css'
 
 function FlexTemplates() {
+    const navigate = useNavigate();
     const [fullName, setFullName] = useState("");
     const [birthDate, setBirthDate] = useState("");
   
@@ -24,17 +29,30 @@ function FlexTemplates() {
       })
     };
 
-
+    const handleOpenLienzo = () => {
+        navigate("/lienzo")
+    };
+  
+    const handleAddTemplate = () => {
+        alert("PARA AGREGAR PLANTILLAS")
+    };
 
     return ( 
         <div className="home-container">
             <VerticalMenu/>
             <div className="flex-templates">
-            <button onClick={handleOpenModal}>Abrir SweetAlert</button>
-                <div>
-                    <p>Nombre completo: {fullName}</p>
-                    <p>Fecha de nacimiento: {birthDate}</p>
-                </div>
+            <ButtonTemplate img={IconPlus} handle={handleOpenLienzo} text={"Lienzo en blanco"}/>
+            <ButtonTemplate img={IconPlus} handle={handleOpenModal} text={"Agregar plantilla"}/>
+            <ButtonTemplate img={IconPlus} handle={handleOpenModal} text={"Agregar cumpleañero"}/>
+            <ButtonTemplate img={AnimalTemplate} handle={handleOpenLienzo} text={"Plantilla 1"}/>
+            <ButtonTemplate handle={handleOpenLienzo} text={"estas deberian ser platillas"}/>
+            <ButtonTemplate handle={handleOpenLienzo} text={"estas deberian ser platillas"}/>
+            <ButtonTemplate handle={handleOpenLienzo} text={"estas deberian ser platillas"}/>
+            <ButtonTemplate handle={handleOpenLienzo} text={"estas deberian ser platillas"}/>
+            <div>
+                <p>Nombre completo: {fullName}</p>
+                <p>Fecha de nacimiento: {birthDate}</p>
+            </div>
             </div>
         </div>
      );
