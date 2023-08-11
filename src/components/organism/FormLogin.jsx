@@ -5,6 +5,7 @@ import LineTop from "../../assets/img/LineTop.svg"
 import LineBottom from "../../assets/img/LineBottom.svg"
 import Logo from "../../assets/img/logo.png"
 import '../../assets/styles/formRegister.css'
+import Swal from 'sweetalert2'
 
 function FormLogin() {
     const navigate = useNavigate();
@@ -31,10 +32,26 @@ function FormLogin() {
         .then(response => response.json())
         .then(data => {
             if (data.token) {
-                alert(data.message);
                 navigate("/home");
               }else{
-                alert(data.message);
+                if(data.error == undefined) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title:"Contraseña incorrecta",
+                        showConfirmButton: false,
+                        timer: 1500
+                      })
+                }else{
+                    Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: data.error.details[0].message,
+                    showConfirmButton: false,
+                    timer: 1500
+                  })
+                }
+               
               }
         });
     }
