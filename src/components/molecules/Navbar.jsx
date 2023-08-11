@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import Logo from "../../assets/img/logo.png"
 import IconUser from "../../assets/img/user.svg";
 
 const StyledNavbar = styled.nav`
@@ -7,10 +8,15 @@ const StyledNavbar = styled.nav`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  background-color: #6735d3;
+  background-color: #7b4ae3;
   color: white;
   padding: 0 1.5rem;
 
+  .logo{
+    height: 90px;
+    position: absolute;
+    left: 2%;
+  }
   .user_profile{
     display: flex;
     align-items: center;
@@ -35,6 +41,7 @@ const StyledNavbar = styled.nav`
 function Navbar() {
   return (
     <StyledNavbar>
+      <img src={Logo} alt="Logo de FelicitArte" className="logo" />
       <div className="user_profile">
         <img src={IconUser} alt="Icono de usuario" />
         <span className="username">Nombre de perfil</span>
