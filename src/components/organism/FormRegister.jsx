@@ -5,8 +5,15 @@ import ElipceSuperior from "../../assets/img/EllipseReg1.svg"
 import ElipceInferior from "../../assets/img/EllipseReg2.svg"
 import Logo from "../../assets/img/logo.png"
 import '../../assets/styles/formRegister.css'
+import styled from "styled-components"
+import Swal from 'sweetalert2'
+
+const StyledDiv = styled.div`
+    margin-bottom: 2.2rem;
+`;
 
 function FormRegister() {
+
   const navigate = useNavigate();
 
     const form = useRef()
@@ -15,7 +22,6 @@ function FormRegister() {
     const handlerClickReg = (e)=>{
         e.preventDefault();
         const regForm = new FormData(form.current)
-        
         const options = {
             method: 'POST',
             headers: {
@@ -34,11 +40,24 @@ function FormRegister() {
         .then(response => response.json())
         .then(data => {
             if (!data.error) {
-              alert(data.message);
+              Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Usuario agregado correctamente',
+                showConfirmButton: false,
+                timer: 1500
+              })
               navigate("/login");
             }
             else{
-              alert(data.error);
+              console.log(data.error.details[0].message);
+              Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: data.error.details[0].message,
+                showConfirmButton: false,
+                timer: 1500
+              })
             }
         });
     }
@@ -57,7 +76,16 @@ function FormRegister() {
         <div className="box-form">
           <form ref={form} className="form_reg" >
               <WrapperInput msn={"Nombre completo"} type={"text"} placeholder={""} name={"name"} />
-              <WrapperInput msn={"Genero"} type={"text"} placeholder={"masculino / femenino / otro"} name={"gender"} />
+              <StyledDiv>
+              <label htmlFor="">Genero</label>
+              <select name="gender" className="selectOptions">
+                <option value="">Selecciona una opción</option>
+                <option value="masculino">Masculino</option>
+               <option value="femenino">Femenino</option>
+               <option value="otro">Otro</option>
+              </select>
+              </StyledDiv>
+             {/*  <WrapperInput msn={"Genero"} type={"list"} placeholder={""} name={"gender"} /> */}
               <WrapperInput msn={"Fecha de nacimiento"} type={"date"} placeholder={""} name={"birthdate"} />
               <WrapperInput msn={"Correo"} type={"e-mail"} placeholder={""} name={"email"} />
               <WrapperInput msn={"Contraseña"} type={"password"} placeholder={""} name={"password"} />

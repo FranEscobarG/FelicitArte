@@ -141,6 +141,15 @@ function FlexWorkArea() {
     }
   };
 
+    const handleGenerateImage = () => {
+      console.log("Aqui deberia de haber descargado la imagen")
+      const dataURL = canvas.toDataURL('image/jpg');
+      const a = document.createElement("a");
+      a.download = "TarjeaCumple.jpg";
+      a.href = dataURL;
+      a.click();
+    }
+
   return (
     <div className="flex-work_area">
       <ToolsLeft
@@ -163,10 +172,12 @@ function FlexWorkArea() {
         onSetTextAlign={setCurrentTextAlign}
         onAddImage={handleAddImage}
       />
-
+      
       <Canvas onCanvasReady={handleCanvasReady} onAddImage={handleAddImage} />
 
-      <div className="tools-right"></div>
+      <div className="tools-right">
+      <button onClick={handleGenerateImage}>Descargar imagen</button>
+      </div>
     </div>
   );
 }

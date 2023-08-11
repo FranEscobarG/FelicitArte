@@ -6,6 +6,15 @@
   align-items: center;
 }
 
+.selectOptions{
+  border-radius: 8px;
+  background-color: #F1BC8C;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  font-size: 1rem; 
+}
+
 .box-form {
   width: 40%;
   display: flex;
