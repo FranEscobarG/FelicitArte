@@ -17,7 +17,7 @@ function FormRegister() {
   const navigate = useNavigate();
 
     const form = useRef()
-    const endpoint = 'http://localhost:4000/api/signup';  // 44.207.54.43
+    // const endpoint = 'http://localhost:4000/api/signup';  // 44.207.54.43
 
     const handlerClickReg = async(e)=>{
         e.preventDefault();
@@ -82,8 +82,8 @@ function FormRegister() {
 
               <span className="textlink">Si ya tienes una cuenta con nosotros, <NavLink className="link" to="/login">Inicia sesión</NavLink></span>
               <div className="buttons">
-                  <button className="btn" onClick={handlerClickReg} >Aceptar</button>
                   <button className="btn" onClick={handleCancel} >Cancelar</button>
+                  <button className="btn" onClick={handlerClickReg} >Aceptar</button>
               </div>
           </form>
         </div>

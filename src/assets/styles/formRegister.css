@@ -35,6 +35,9 @@
   text-align: center;
   font-size: 0.9rem;
 }
+.form_reg span{
+  margin-bottom: .6rem;
+}
 .link {
   text-decoration: none;
   color: #b46c2b;
@@ -48,6 +51,7 @@
 .btn {
   width: 45%;
   padding: 0.9rem;
+  font-size: 1rem;
   border-radius: 15px;
   color: white;
   background: #b46c2b;

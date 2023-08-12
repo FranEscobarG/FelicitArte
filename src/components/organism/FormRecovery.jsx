@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
 import Swal from 'sweetalert2'
 import { loginUser } from "../../api/user";
@@ -8,7 +8,7 @@ import LineBottom from "../../assets/img/LineBottom.svg"
 import Logo from "../../assets/img/logo.png"
 import '../../assets/styles/formRegister.css'
 
-function FormLogin() {
+function FormRecovery() {
     const navigate = useNavigate();
     const form = useRef()
     
@@ -34,6 +34,11 @@ function FormLogin() {
               })
         }
     }
+    
+    const handleCancel = (e)=>{
+        e.preventDefault();
+        navigate("/login");
+      }
 
     return ( 
         <>
@@ -43,11 +48,11 @@ function FormLogin() {
         <div className="box-form">
             <form ref={form} className="form_reg" >
                 <WrapperInput msn={"Correo"} type={"e-mail"} placeholder={""} name={"email"} />
-                <WrapperInput msn={"Contraseña"} type={"password"} placeholder={""} name={"password"} />
+                <WrapperInput msn={"Nueva contraseña"} type={"password"} placeholder={""} name={"password"} />
+                <WrapperInput msn={"Confirmar contraseña"} type={"password"} placeholder={""} name={"password"} />
 
-                <span className="textlink">Si aun no tienes una cuenta con nosotros, <NavLink className="link" to="/">Registrate</NavLink></span>
-                <span className="textlink">¿Olvidaste tu contraseña? <NavLink className="link" to="/recovery">Cambiar contraseña</NavLink></span>
-                <div className="button-login">
+                <div className="buttons">
+                    <button className="btn" onClick={handleCancel}>Regresar</button>
                     <button className="btn" onClick={handlerClick}>Iniciar Sesión</button>
                 </div>
             </form>
@@ -56,4 +61,4 @@ function FormLogin() {
      );
 }
 
-export default FormLogin;
+export default FormRecovery;
