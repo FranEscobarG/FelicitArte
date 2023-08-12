@@ -63,7 +63,7 @@ function FlexTemplates() {
             <VerticalMenu/>
             <div className="flex-templates">
             <ButtonTemplate img={IconPlus} handle={handleOpenLienzo} text={"Lienzo en blanco"}/>
-            <ButtonTemplate img={IconPlus} handle={handleOpenModal} text={"Agregar plantilla"}/>
+            <ButtonTemplate img={IconPlus} handle={handleAddTemplate} text={"Agregar plantilla"}/>
             <ButtonTemplate img={IconPlus} handle={handleOpenModal} text={"Agregar cumpleañero"}/>
             <ButtonTemplate img={AnimalTemplate} handle={handleOpenLienzo} text={"Plantilla 1"}/>
             <ButtonTemplate handle={handleOpenLienzo} text={"estas deberian ser platillas"}/>
