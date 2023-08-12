@@ -4,7 +4,7 @@ import FlexWorkArea from "../components/organism/FlexWorkArea";
 function WorkArea() {
     return ( 
         <div>
-            <Navbar/>
+            <Navbar btnBack={true} />
             <FlexWorkArea/>
         </div>
      );

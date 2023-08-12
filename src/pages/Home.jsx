@@ -4,7 +4,7 @@ import FlexTemplates from "../components/organism/FlexTemplates";
 function Home() {
     return ( 
         <>
-            <Navbar/>
+            <Navbar btnBack={false} />
             <FlexTemplates/>
         </>
      );

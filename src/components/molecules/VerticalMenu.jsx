@@ -2,6 +2,7 @@ import styled from "styled-components"
 import IconFolder from "../../assets/img/Folder.svg";
 import IconArows from "../../assets/img/DoubleRight.svg";
 import IconBirthday from "../../assets/img/Birthday.svg";
+import { useNavigate } from "react-router-dom";
 
 const StyledDiv = styled.div`
     min-height: 90vh;
@@ -48,6 +49,12 @@ const StyledDiv = styled.div`
 `;
 
 function VerticalMenu() {
+    const navigate = useNavigate();
+    
+    const handleShowBirthday = () => {
+        navigate("/birthdays")
+    };
+
     return ( 
         <StyledDiv>
             <div>
@@ -66,7 +73,7 @@ function VerticalMenu() {
                 <img src={IconArows} alt="Icono de flecha" />
                 <img src={IconFolder} alt="Icono de folder" />Mis plantillas
             </div>
-            <button><img src={IconBirthday} alt="" />Ver todos los cumpleaños</button>
+            <button onClick={handleShowBirthday} ><img src={IconBirthday} alt="" />Ver todos los cumpleaños</button>
         </StyledDiv>
      );
 }

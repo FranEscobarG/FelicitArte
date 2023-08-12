@@ -16,8 +16,7 @@ function FormRegister() {
 
   const navigate = useNavigate();
 
-    const form = useRef()
-    // const endpoint = 'http://localhost:4000/api/signup';  // 44.207.54.43
+    const form = useRef() // 44.207.54.43
 
     const handlerClickReg = async(e)=>{
         e.preventDefault();
