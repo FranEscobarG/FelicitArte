@@ -6,6 +6,8 @@ import ButtonTemplate from "../atoms/ButtonTemplate";
 import IconPlus from "../../assets/img/iconPlus.svg";
 import AnimalTemplate from "../../assets/img/Animal-Folder.svg";
 import '../../assets/styles/flexTemplates.css'
+import { createBirthdayBoy } from "../../api/birthdayBoy";
+import toast, { Toaster } from 'react-hot-toast';
 
 function FlexTemplates() {
     const navigate = useNavigate();
@@ -14,21 +16,40 @@ function FlexTemplates() {
   
     const handleOpenModal = () => {
       Swal.fire({
-        title: "Agregar cumpleañero",
-        inputLabel: "Nombre completo",
+        title: "Agregar Cumpleañero",
         html:
-          '<label for="swal-input1" style="margin-bottom: 10px">Nombre completo</label> <br>' +
-          `<input id="swal-input1" class="swal2-input" placeholder="Nombre completo" value="${fullName}"> <br>` +
-          '<label for="swal-input2" style="margin-bottom: 10px">Fecha de nacimiento</label>' + 
-          '<br><input type="date" id="swal-input2" class="swal2-input">',
-        showCancelButton: true,
-        preConfirm: () => {
-          setFullName(document.getElementById("swal-input1").value);
-          setBirthDate(document.getElementById("swal-input2").value);
-        },
+            `<label for="swal-input1" class="label-styled">Nombre completo</label> <br>` +
+            `<input id="swal-input1" class="swal2-input border-box-input" placeholder="Nombre completo">` +
+            `<br><br><label for="swal-input2" class="label-styled">Fecha de nacimiento</label>` + 
+            `<br><input type="date" id="swal-input2" class="swal2-input border-box-input">`,
+            showCancelButton: true,
+            confirmButtonText: "Enviar",
+            preConfirm: async() => {
+              if(!document.getElementById("swal-input1").value || !document.getElementById("swal-input2").value){
+                Swal.showValidationMessage("Por favor, rellena ambos campos");
+              }else{
+                setFullName(document.getElementById("swal-input1").value);
+                setBirthDate(document.getElementById("swal-input2").value);
+                let birthdayBoy = {
+                  fullName: fullName,
+                  birthDate: birthDate
+                }
+                
+                try{
+                  const response = await createBirthdayBoy(birthdayBoy);
+                  console.log(response);
+                  toast.success('Guardado exitosamente')
+                }catch(error){
+                  toast.error("UPSS algo salio mal")
+                }
+              }
+            },
+            customClass: {
+                input: "border-box-input",
+              },
       })
-    };
-
+    }
+     
     const handleOpenLienzo = () => {
         navigate("/lienzo")
     };
@@ -49,10 +70,7 @@ function FlexTemplates() {
             <ButtonTemplate handle={handleOpenLienzo} text={"estas deberian ser platillas"}/>
             <ButtonTemplate handle={handleOpenLienzo} text={"estas deberian ser platillas"}/>
             <ButtonTemplate handle={handleOpenLienzo} text={"estas deberian ser platillas"}/>
-            <div>
-                <p>Nombre completo: {fullName}</p>
-                <p>Fecha de nacimiento: {birthDate}</p>
-            </div>
+            <Toaster />
             </div>
         </div>
      );

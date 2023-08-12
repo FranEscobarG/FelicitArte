@@ -7,7 +7,7 @@ import Logo from "../../assets/img/logo.png"
 import '../../assets/styles/formRegister.css'
 import styled from "styled-components"
 import Swal from 'sweetalert2'
-
+import { createUser } from "../../api/user";
 const StyledDiv = styled.div`
     margin-bottom: 2.2rem;
 `;
@@ -19,47 +19,37 @@ function FormRegister() {
     const form = useRef()
     const endpoint = 'http://localhost:4000/api/signup';  // 44.207.54.43
 
-    const handlerClickReg = (e)=>{
+    const handlerClickReg = async(e)=>{
         e.preventDefault();
-        const regForm = new FormData(form.current)
-        const options = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              fullName: regForm.get('name'),
-              gender: regForm.get('gender'),
-              birthDate: regForm.get('birthdate'),
-              email: regForm.get('email'),
-              password: regForm.get('password')
-            })
+        const regForm = new FormData(form.current);
+        let user = {
+          fullName: regForm.get('name'),
+          gender: regForm.get('gender'),
+          birthDate: regForm.get('birthdate'),
+          email: regForm.get('email'),
+          password: regForm.get('password')
         }
-        
-        fetch(endpoint, options) 
-        .then(response => response.json())
-        .then(data => {
-            if (!data.error) {
-              Swal.fire({
-                position: 'center',
-                icon: 'success',
-                title: 'Usuario agregado correctamente',
-                showConfirmButton: false,
-                timer: 1500
-              })
-              navigate("/login");
-            }
-            else{
-              console.log(data.error.details[0].message);
-              Swal.fire({
-                position: 'center',
-                icon: 'error',
-                title: data.error.details[0].message,
-                showConfirmButton: false,
-                timer: 1500
-              })
-            }
-        });
+        try{
+          const response = await createUser(user);
+          console.log(response);
+          Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Usuario agregado correctamente',
+            showConfirmButton: false,
+            timer: 1500
+          })
+          navigate("/login");
+        }catch(error){
+          console.log(error.response.data.message);
+          Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: error.response.data.message,
+            showConfirmButton: false,
+            timer: 1500
+          })
+        }      
     }
 
     const handleCancel = (e)=>{

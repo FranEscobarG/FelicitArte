@@ -13,3 +13,17 @@
     flex-wrap: wrap;
     grid-gap: 5rem;
 }
+
+.border-box-input {
+    /*  box-sizing: border-box; */
+     border-radius: 30px;
+     padding: 10px;
+     width: 80%;
+     /* Otros estilos personalizados aquí si es necesario */
+   }
+ 
+   .label-styled{
+     font-size: 1rem;
+    text-align: center;
+    margin-top: 20px;
+   }

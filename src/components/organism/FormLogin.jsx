@@ -6,54 +6,33 @@ import LineBottom from "../../assets/img/LineBottom.svg"
 import Logo from "../../assets/img/logo.png"
 import '../../assets/styles/formRegister.css'
 import Swal from 'sweetalert2'
+import { loginUser } from "../../api/user";
 
 function FormLogin() {
     const navigate = useNavigate();
-
     const form = useRef()
-    const endpoint = 'http://localhost:4000/api/signin'; // 44.207.54.43
     
-    const handlerClick = (e)=>{
+    const handlerClick = async(e)=>{
         e.preventDefault();
-        const loginForm = new FormData(form.current)
-        
-        const options = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
+        try{
+            const loginForm = new FormData(form.current);
+            let user = {
                 email: loginForm.get('email'),
                 password: loginForm.get('password')
-            })
+            }
+            const response = await loginUser(user);
+            console.log(response);
+            navigate("/home");
+        }catch(error){
+            console.log(error);
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: "Contraseña o Correo incorrecto",
+                showConfirmButton: false,
+                timer: 1500
+              })
         }
-        
-        fetch(endpoint, options) 
-        .then(response => response.json())
-        .then(data => {
-            if (data.token) {
-                navigate("/home");
-              }else{
-                if(data.error == undefined) {
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'error',
-                        title:"Contraseña incorrecta",
-                        showConfirmButton: false,
-                        timer: 1500
-                      })
-                }else{
-                    Swal.fire({
-                    position: 'center',
-                    icon: 'error',
-                    title: data.error.details[0].message,
-                    showConfirmButton: false,
-                    timer: 1500
-                  })
-                }
-               
-              }
-        });
     }
 
     return ( 

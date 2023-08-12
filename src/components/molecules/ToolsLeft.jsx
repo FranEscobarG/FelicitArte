@@ -1,5 +1,7 @@
 // ToolsLeft.jsx
 import { useState } from "react";
+import axios from "axios";
+const endpoint = 'http://localhost:4000/api/upload'; 
 
 function ToolsLeft({
   onAddShape,
@@ -37,7 +39,20 @@ function ToolsLeft({
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
+    let formData = new FormData();
+    formData.append("image",file);
     if (file) {
+      axios({
+        method:"POST",
+        url:endpoint,
+        data:formData,
+        headers: { "Content-Type": "multipart/form-data" }
+       }).then(function (response) {
+        console.log(response);
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
       const imageURL = URL.createObjectURL(file);
       onAddImage(imageURL);
     }
