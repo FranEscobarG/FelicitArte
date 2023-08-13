@@ -18,6 +18,13 @@ const StyledNavbar = styled.nav`
     position: absolute;
     left: 2%;
   }
+  .btn-back{
+    color: white;
+    text-decoration: none;
+    margin-right: 7%;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
   .user_profile{
     display: flex;
     align-items: center;
@@ -43,7 +50,7 @@ function Navbar({btnBack}) {
   return (
     <StyledNavbar>
       <img src={Logo} alt="Logo de FelicitArte" className="logo" />
-      {btnBack ? <NavLink to="/home">Regresar</NavLink> : null}
+      {btnBack ? <NavLink className={"btn-back"} to="/home">Regresar</NavLink> : null}
       
       <div className="user_profile">
         <img src={IconUser} alt="Icono de usuario" />
