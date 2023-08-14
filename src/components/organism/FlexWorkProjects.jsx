@@ -1,18 +1,17 @@
-// FlexWorkArea.jsx
-import { useState, useEffect } from "react";
+import React,{ useState, useEffect } from "react";
 import { fabric } from "fabric";
 import axios from "axios";
 import Canvas from "../atoms/Canvas";
 import ToolsLeft from "../molecules/ToolsLeft";
 import IconRedo from "../../assets/img/Redo.png"
 import IconUndo from "../../assets/img/Undo.png"
-import toast, { Toaster } from "react-hot-toast";
 import "../../assets/styles/workArea.css";
+import toast, { Toaster } from "react-hot-toast";
 const endpoint = 'http://localhost:4000/api/upload'; 
 
 
-function FlexWorkArea({projectName}) {
-  const [canvas, setCanvas] = useState(null);
+function FlexWorkProjects({projectName}) {
+    const [canvas, setCanvas] = useState(null);
   const [undoStack, setUndoStack] = useState([]);
   const [redoStack, setRedoStack] = useState([]);
   const [currentColor, setCurrentColor] = useState("#000000");
@@ -31,6 +30,7 @@ function FlexWorkArea({projectName}) {
     }
   }, []);
   ///
+
   useEffect(() => {
     if (canvas) {
       canvas.isDrawingMode = false;
@@ -187,18 +187,21 @@ function FlexWorkArea({projectName}) {
     }
 
     const handleSaveChanges = () =>{
-      const objects = canvas.getObjects();  
+        
+      const objects = canvas.getObjects();
+        
       try{
-        toast.success('Guardado exitosamente');
+        toast.success('Guardado exitosamente')
         const canvasData = JSON.stringify(objects);
         setCanvasData(canvasData);
         localStorage.setItem(projectName, canvasData);
+        
       }catch(error){
         toast.error("UPSS algo salio mal")
       }
     }
 
-    /* const handleLoad = () => {
+    const handleLoad = () => {
       if (canvasData) {
         const objects = JSON.parse(canvasData);
         canvas.loadFromJSON(
@@ -206,7 +209,9 @@ function FlexWorkArea({projectName}) {
           canvas.renderAll.bind(canvas)
         );
       }
-    }; */ 
+    }; 
+
+  
 
   return (
     <div className="flex-work_area">
@@ -243,14 +248,15 @@ function FlexWorkArea({projectName}) {
         </div>
         <div className="buttons-right">
         <Toaster />
-        {/*   <button className="btn-restore" onClick={handleLoad}>Cargar cambios</button> */}
+           <button className="btn-restore" onClick={handleLoad}>Cargar cambios</button> 
           <button className="btn-save" onClick={handleSaveChanges}>Guardar cambios</button>
           <button className="btn-export" onClick={handleGenerateImage}>Exportar a JPG</button>
           <button className="btn-cancel" onClick={handleClearCanvas}>Limpiar</button>
         </div>
       </div>
     </div>
+    
   );
 }
 
-export default FlexWorkArea;
+export default FlexWorkProjects;

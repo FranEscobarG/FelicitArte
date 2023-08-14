@@ -5,6 +5,7 @@ import Home from "../pages/Home";
 import WorkArea from "../pages/WorkArea";
 import RecoverPassword from "../pages/RecoverPassword";
 import BirthdayBoys from "../pages/BirthdayBoys";
+import Projects from "../pages/Projects";
 
 function App() {
   return (
@@ -15,7 +16,8 @@ function App() {
             <Route path="/recovery" element={<RecoverPassword />} />
             <Route path="/home" element={<Home />} />
             <Route path="/birthdays" element={<BirthdayBoys />} />
-            <Route path="/lienzo" element={<WorkArea />} />
+            <Route path="/lienzo/:projectName" element={<WorkArea />} />
+            <Route path="/projects/:projectName" element={<Projects/>}/>
 
             {/* <Route path="/*" element={<NotFound />} /> */}
           </Routes>
