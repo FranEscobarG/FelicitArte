@@ -2,12 +2,12 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 const StyledDiv = styled.div`
-  width: 17%;
-  height: 30vh;
+  width: 20%;
+  height: 40vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  label{
+  label {
     font-weight: 700;
   }
 `;
@@ -20,23 +20,21 @@ const StyledButton = styled.button`
   cursor: pointer;
 `;
 
-function ButtonCard({text}) {
-    const navigate = useNavigate();
+function ButtonCard({ text }) {
+  const navigate = useNavigate();
 
-    const handlerClick = (name) =>{
-        
-        navigate("/projects/"+name);
-    };
+  const handlerClick = (name) => {
+    navigate("/projects/" + name);
+  };
 
-
-    return ( 
-        <StyledDiv>
+  return (
+    <StyledDiv>
       <StyledButton onClick={() => handlerClick(text)}>
-        <img  alt="Icon plus" />
+        <img alt="Icon plus" />
       </StyledButton>
       <label htmlFor="">{text}</label>
     </StyledDiv>
-     );
+  );
 }
 
 export default ButtonCard;

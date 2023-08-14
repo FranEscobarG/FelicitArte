@@ -5,11 +5,23 @@
 }
 
 .flex-templates{
-    max-width: 85%;
+    width: 85%;
     padding: 4% 5%;
+    display: block;
+}
+
+.buttons-templates{
+    width: 100%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    flex-wrap: wrap;
+    grid-gap: 12%;
+}
+.plantillas{
+    width: 100%;
+    margin-top: 6%;
+    display: flex;
+    align-items: center;
     flex-wrap: wrap;
     grid-gap: 5rem;
 }

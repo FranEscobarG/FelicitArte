@@ -2,6 +2,8 @@ import styled from "styled-components"
 import Logo from "../../assets/img/logo.png"
 import IconUser from "../../assets/img/user.svg";
 import { NavLink } from "react-router-dom";
+import UserContext from "../../context/UserContext";
+import { useContext } from "react";
 
 const StyledNavbar = styled.nav`
   width: 100%;
@@ -47,6 +49,8 @@ const StyledNavbar = styled.nav`
 `;
 
 function Navbar({btnBack}) {
+  const {userName} = useContext(UserContext);
+
   return (
     <StyledNavbar>
       <img src={Logo} alt="Logo de FelicitArte" className="logo" />
@@ -54,7 +58,7 @@ function Navbar({btnBack}) {
       
       <div className="user_profile">
         <img src={IconUser} alt="Icono de usuario" />
-        <span className="username">Nombre de perfil</span>
+        <span className="username">{userName}</span>
       </div>
       <button>Cerrar Sesión</button>
     </StyledNavbar>
