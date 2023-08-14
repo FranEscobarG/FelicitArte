@@ -24,11 +24,14 @@ function FlexWorkProjects({projectName}) {
   const [canvasData, setCanvasData] = useState("");
 
   useEffect(() => {
+    if (canvasData) {
+      handleLoad();
+    }
     const savedCanvasData = localStorage.getItem(projectName);
     if (savedCanvasData) {
       setCanvasData(savedCanvasData);
     }
-  }, []);
+  }, [canvasData]);
   ///
 
   useEffect(() => {

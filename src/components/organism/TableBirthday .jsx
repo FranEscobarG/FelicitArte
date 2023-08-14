@@ -4,6 +4,7 @@ import { getAllBirthdayBoys, updateBirthdayBoy, deleteBirthdayBoy } from "../../
 import IconEdit from "../../assets/img/icon-edit.png";
 import IconDelete from "../../assets/img/icon-delete.png";
 import { useEffect, useState } from "react";
+import { format } from "date-fns"; 
 
 const StyledTable = styled.table`
   width: 80%;
@@ -125,7 +126,7 @@ function TableBirthday() {
           {birthdayList.map((birthdayPerson, index) => (
             <tr key={index}>
               <td>{birthdayPerson.fullName}</td>
-              <td>{birthdayPerson.birthDate.split("T")[0]}</td>
+              <td> {format(new Date(birthdayPerson.birthDate.split("T")[0].split("-")), "dd - MM - yyyy")}</td>
               <td className="buttons">
                 <button onClick={() => handleEditBirthdayBoy(birthdayPerson.id)}>
                   <img src={IconEdit} alt="Icono de editar" />
