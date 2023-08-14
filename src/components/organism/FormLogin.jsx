@@ -11,7 +11,7 @@ import '../../assets/styles/formRegister.css'
 
 function FormLogin() {
     const navigate = useNavigate();
-    const {isLoged, setIsLoged} = useContext(UserContext);
+    const { setIsLoged } = useContext(UserContext);
     const { setUserName } = useContext(UserContext);
     const form = useRef()
     

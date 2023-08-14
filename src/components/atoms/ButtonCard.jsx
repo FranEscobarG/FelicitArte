@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import AnimalFolder from "../../assets/img/Animal-Folder.svg"
 
 const StyledDiv = styled.div`
   width: 20%;
@@ -30,7 +31,7 @@ function ButtonCard({ text }) {
   return (
     <StyledDiv>
       <StyledButton onClick={() => handlerClick(text)}>
-        <img alt="Icon plus" />
+        <img src={AnimalFolder} alt="Icon template" />
       </StyledButton>
       <label htmlFor="">{text}</label>
     </StyledDiv>

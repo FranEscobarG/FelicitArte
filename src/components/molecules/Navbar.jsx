@@ -1,9 +1,10 @@
 import styled from "styled-components"
+import { useContext } from "react";
+import Swal from 'sweetalert2'
 import Logo from "../../assets/img/logo.png"
 import IconUser from "../../assets/img/user.svg";
 import { NavLink } from "react-router-dom";
 import UserContext from "../../context/UserContext";
-import { useContext } from "react";
 
 const StyledNavbar = styled.nav`
   width: 100%;
@@ -49,7 +50,27 @@ const StyledNavbar = styled.nav`
 `;
 
 function Navbar({btnBack}) {
-  const {userName} = useContext(UserContext);
+  const {userName, setUserName} = useContext(UserContext);
+  const { setIsLoged} = useContext(UserContext);
+
+  const handleLogout = () => {
+    Swal.fire({
+      title: "Cerrar Sesión",
+      text: "¿Estás seguro que deseas cerrar la sesión?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sí, cerrar sesión",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setIsLoged(false);
+        setUserName("");
+      }
+    });
+  };
+
 
   return (
     <StyledNavbar>
@@ -60,7 +81,7 @@ function Navbar({btnBack}) {
         <img src={IconUser} alt="Icono de usuario" />
         <span className="username">{userName}</span>
       </div>
-      <button>Cerrar Sesión</button>
+      <button onClick={handleLogout}>Cerrar Sesión</button>
     </StyledNavbar>
   );
 }
