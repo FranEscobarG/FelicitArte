@@ -7,6 +7,11 @@ const StyledDiv = styled.div`
   align-items: center;
   color: white;
   font-weight: 700;
+  transition: background-color 0.3s, color 0.3s;
+  &:hover {
+  background-color: #8a8484;
+  border-radius: 8px;
+}
 `;
 const StyledButton = styled.button`
   width: 100%;

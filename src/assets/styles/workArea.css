@@ -27,9 +27,6 @@
   z-index: 5; /* Capa superior para que aparezca sobre los otros elementos */
   background-color: #d9d9d9;
 }
-/* .shapes-options {
-    min-width: 90%;
-} */
 .shapes-options button {
     width: 55%;
     height: 50px;
@@ -45,8 +42,35 @@
     top: 40%;
 }
 
+.upload-image {
+  width: 90%;
+}
+#image-upload {
+  display: none;
+}
+.upload-label {
+  width: 100%;
+  margin-top: 5%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: white;
+  font-weight: 500;
+  transition: background-color 0.3s, color 0.3s;
+}
+.upload-label img{
+  width: 36%;
+}
+.upload-label:hover {
+  background-color: #8a8484;
+  border-radius: 8px;
+}
+
 .redo-undo{
    width: 80%;
+   margin-top: 15%;
     display: flex;
     gap: 10px;
 }
@@ -59,8 +83,14 @@
 .redo-undo button img{
     width: 45%;
 }
+.redo-undo button:hover {
+  background-color: #c0bfff;
+}
+
 .buttons-right{
     width: 100%;
+    position: absolute;
+    bottom: 5%;
     display: flex;
     flex-direction: column;
     align-items: center;

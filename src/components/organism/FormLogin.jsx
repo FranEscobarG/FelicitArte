@@ -1,6 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { useRef } from "react";
+import { useContext, useRef } from "react";
 import Swal from 'sweetalert2'
+import UserContext from "../../context/UserContext";
 import { loginUser } from "../../api/user";
 import WrapperInput from "../molecules/WrapperInput";
 import LineTop from "../../assets/img/LineTop.svg"
@@ -10,6 +11,8 @@ import '../../assets/styles/formRegister.css'
 
 function FormLogin() {
     const navigate = useNavigate();
+    const {isLoged, setIsLoged} = useContext(UserContext);
+    const { setUserName } = useContext(UserContext);
     const form = useRef()
     
     const handlerClick = async(e)=>{
@@ -21,7 +24,9 @@ function FormLogin() {
                 password: loginForm.get('password')
             }
             const response = await loginUser(user);
-            console.log(response);
+            console.log(response.data);
+            setIsLoged(true);
+            setUserName(response.data.fullName); 
             navigate("/home");
         }catch(error){
             console.log(error);
