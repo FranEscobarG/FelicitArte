@@ -39,13 +39,15 @@ const StyledTable = styled.table`
 
 function TableBirthday() {
   const [birthdayList, setBirthdayList] = useState([]); // State to store the birthday list
-
+  const [loading, setLoading] = useState(true);
     async function fetchBirthdayBoys() {
       try {
         const response = await getAllBirthdayBoys();
         setBirthdayList(response.data); // Update the state with fetched data
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching birthday boys:", error);
+        setLoading(false);
       }
     }
   useEffect(() => {
@@ -103,9 +105,14 @@ function TableBirthday() {
       }
     }
   };
-
+  
   return (
     <div className="box-birthdays">
+      {loading ? (
+        <p>Cargando...</p>
+      ) : birthdayList.length === 0 ? (
+        <p>Al parecer no has registrado ningún cumpleañero.</p>
+      ) :(
       <StyledTable>
         <thead className="thead">
           <tr>
@@ -131,6 +138,7 @@ function TableBirthday() {
           ))}
         </tbody>
       </StyledTable>
+      )}
     </div>
   );
 }
