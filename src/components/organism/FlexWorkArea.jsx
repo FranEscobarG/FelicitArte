@@ -1,9 +1,13 @@
 // FlexWorkArea.jsx
 import { useState, useEffect } from "react";
+import { fabric } from "fabric";
+import axios from "axios";
 import Canvas from "../atoms/Canvas";
 import ToolsLeft from "../molecules/ToolsLeft";
-import { fabric } from "fabric";
+import IconRedo from "../../assets/img/Redo.png"
+import IconUndo from "../../assets/img/Undo.png"
 import "../../assets/styles/workArea.css";
+const endpoint = 'http://localhost:4000/api/upload'; 
 
 function FlexWorkArea() {
   const [canvas, setCanvas] = useState(null);
@@ -150,18 +154,35 @@ function FlexWorkArea() {
       a.click();
     }
 
+    const handleFileChange = (e) => {
+      const file = e.target.files[0];
+      let formData = new FormData();
+      formData.append("image",file);
+      if (file) {
+        axios({
+          method:"POST",
+          url:endpoint,
+          data:formData,
+          headers: { "Content-Type": "multipart/form-data" }
+         }).then(function (response) {
+          console.log(response);
+        })
+        .catch(function (response) {
+          console.log(response);
+        });
+        const imageURL = URL.createObjectURL(file);
+        handleAddImage(imageURL);
+      }
+    };
+
   return (
     <div className="flex-work_area">
       <ToolsLeft
         onAddShape={handleAddShape}
         onAddText={handleAddText}
         onToggleDraw={handleToggleDraw}
-        onClearCanvas={handleClearCanvas}
-        onUndo={handleUndo}
-        onRedo={handleRedo}
         onSetColor={handleSetColor}
         onSetLineWidth={handleSetLineWidth} // Pass the function
-        redoEnabled={redoStack.length > 0}
         currentColor={currentColor}
         currentLineWidth={currentLineWidth} // Pass the currentLineWidth state
         currentFontFamily={currentFontFamily}
@@ -170,13 +191,27 @@ function FlexWorkArea() {
         onSetFontSize={setCurrentFontSize}
         currentTextAlign={currentTextAlign}
         onSetTextAlign={setCurrentTextAlign}
-        onAddImage={handleAddImage}
+        canvas={canvas} 
       />
       
       <Canvas onCanvasReady={handleCanvasReady} onAddImage={handleAddImage} />
 
       <div className="tools-right">
-      <button onClick={handleGenerateImage}>Descargar imagen</button>
+        <label htmlFor="image-upload">Agregar Imagen:</label>
+        <input
+          id="image-upload"
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+        />
+        <div className="redo-undo">
+          <button onClick={handleUndo}><img src={IconUndo} alt="" /></button>
+          <button onClick={handleRedo} disabled={redoStack.length < 0}><img src={IconRedo} alt="" /></button>
+        </div>
+        <div className="buttons-right">
+          <button className="btn-save" onClick={handleGenerateImage}>Guardar</button>
+          <button className="btn-cancel" onClick={handleClearCanvas}>Limpiar</button>
+        </div>
       </div>
     </div>
   );

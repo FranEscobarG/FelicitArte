@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Swal from "sweetalert2";
 import { getAllBirthdayBoys, updateBirthdayBoy, deleteBirthdayBoy } from "../../api/birthdayBoy";
 import IconEdit from "../../assets/img/icon-edit.png";
 import IconDelete from "../../assets/img/icon-delete.png";
@@ -52,21 +53,53 @@ function TableBirthday() {
   }, []);
 
   const handleEditBirthdayBoy = async (id) => {
-    // Implementar la lógica para abrir un formulario de edición
-    // y luego llamar a updateBirthdayBoy con los datos actualizados.
-    console.log("Editando cumpleañero con ID:", id);
+    const birthdayPerson = birthdayList.find((person) => person.id === id);
+  
+    const { value: formValues } = await Swal.fire({
+      title: "Editar Cumpleañero",
+      html: `
+        <input type="text" id="swal-input1" class="swal2-input" value="${birthdayPerson?.fullName || ''}" placeholder="Nombre completo">
+        <input type="date" id="swal-input2" class="swal2-input" value="${birthdayPerson?.birthDate?.split("T")[0] || ''}">
+      `,
+      showCancelButton: true,
+      confirmButtonText: "Guardar",
+      preConfirm: async () => {
+        const newFullName = document.getElementById("swal-input1").value;
+        const newBirthDate = document.getElementById("swal-input2").value;
+  
+        if (!newFullName) {
+          Swal.showValidationMessage("Por favor, ingresa un nombre válido");
+          return; // Agregar un return aquí para evitar que continúe la lógica en caso de error
+        }
+  
+        try {
+          await updateBirthdayBoy(id, { fullName: newFullName, birthDate: newBirthDate });
+          fetchBirthdayBoys();
+          Swal.fire("¡Guardado!", "Los datos se han actualizado exitosamente.", "success");
+        } catch (error) {
+          Swal.fire("Error", "Ha ocurrido un error al guardar los datos.", "error");
+        }
+      },
+    });
   };
 
   const handleDeleteBirthdayBoy = async (id) => {
-    // Implementar la lógica para confirmar la eliminación
-    const shouldDelete = window.confirm("¿Estás seguro de que deseas eliminar este cumpleañero?");
-    if (shouldDelete) {
+    const shouldDelete = await Swal.fire({
+      title: "Confirmar eliminación",
+      text: "¿Estás seguro de que deseas eliminar este cumpleañero?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (shouldDelete.isConfirmed) {
       try {
         await deleteBirthdayBoy(id);
         fetchBirthdayBoys();
-        console.log("Cumpleañero eliminado con éxito");
+        Swal.fire("¡Eliminado!", "El cumpleañero ha sido eliminado exitosamente.", "success");
       } catch (error) {
-        console.error("Error al eliminar el cumpleañero:", error);
+        Swal.fire("Error", "Ha ocurrido un error al eliminar el cumpleañero.", "error");
       }
     }
   };
