@@ -255,9 +255,6 @@ function FlexWorkProjects({ projectName }) {
 
         <div className="buttons-right">
           <Toaster />
-          <button className="btn-restore" onClick={handleLoad}>
-            Cargar cambios
-          </button>
           <button className="btn-save" onClick={handleSaveChanges}>
             Guardar cambios
           </button>
