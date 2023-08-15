@@ -3,6 +3,7 @@ import Swal from "sweetalert2";
 import { getAllBirthdayBoys, updateBirthdayBoy, deleteBirthdayBoy } from "../../api/birthdayBoy";
 import IconEdit from "../../assets/img/icon-edit.png";
 import IconDelete from "../../assets/img/icon-delete.png";
+import NoBirthDayBoys from "../../assets/img/SinCumpleañeros.png";
 import { useEffect, useState } from "react";
 import { format } from "date-fns"; 
 
@@ -112,7 +113,7 @@ function TableBirthday() {
       {loading ? (
         <p>Cargando...</p>
       ) : birthdayList.length === 0 ? (
-        <p>Al parecer no has registrado ningún cumpleañero.</p>
+        <div className="noBirthDayBoys" ><img src={NoBirthDayBoys} alt="Sin cumpleañeros" /><p>Al parecer no has registrado ningún cumpleañero.</p></div>
       ) :(
       <StyledTable>
         <thead className="thead">
@@ -123,8 +124,8 @@ function TableBirthday() {
           </tr>
         </thead>
         <tbody>
-          {birthdayList.map((birthdayPerson, index) => (
-            <tr key={index}>
+          {birthdayList.map((birthdayPerson) => (
+            <tr key={birthdayPerson.id}>
               <td>{birthdayPerson.fullName}</td>
               <td> {format(new Date(birthdayPerson.birthDate.split("T")[0].split("-")), "dd - MM - yyyy")}</td>
               <td className="buttons">

@@ -1,16 +1,29 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import toast, { Toaster } from "react-hot-toast";
 import VerticalMenu from "../molecules/VerticalMenu";
 import ButtonTemplate from "../atoms/ButtonTemplate";
 import IconPlus from "../../assets/img/iconPlus.svg";
-import { createBirthdayBoy } from "../../api/birthdayBoy";
-import toast, { Toaster } from "react-hot-toast";
 import ButtonCard from "../atoms/ButtonCard";
+import { getNextBirthdayBoys, createBirthdayBoy } from "../../api/birthdayBoy";
 import "../../assets/styles/flexTemplates.css";
 
 function FlexTemplates() {
   const navigate = useNavigate();
+  const [nextbirthdayList, setNextBirthdayList] = useState([]);
+
+  async function fetchNextBirthdayBoys() {
+    try {
+      const response = await getNextBirthdayBoys();
+      setNextBirthdayList(response.data);
+    } catch (error) {
+      console.error("Error fetching birthday boys:", error);
+    }
+  }
+  useEffect(() => {
+    fetchNextBirthdayBoys();
+  }, []);
 
   const handleOpenModal = () => {
     Swal.fire({
@@ -40,6 +53,7 @@ function FlexTemplates() {
           try {
             const response = await createBirthdayBoy(birthdayBoy);
             console.log(response);
+            fetchNextBirthdayBoys();
             toast.success("Guardado exitosamente");
           } catch (error) {
             toast.error("UPSS algo salio mal");
@@ -106,7 +120,7 @@ function FlexTemplates() {
 
   return (
     <div className="home-container">
-      <VerticalMenu />
+      <VerticalMenu nextbirthdayList={nextbirthdayList} />
       <div className="flex-templates">
         <div className="buttons-templates">
           <ButtonTemplate

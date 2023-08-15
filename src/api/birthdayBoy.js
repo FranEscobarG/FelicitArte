@@ -20,6 +20,10 @@ export const deleteBirthdayBoy = async (ID) =>{
     return await axios.delete(`http://localhost:4000/api/birthdayBoy/${ID}`);
 }
 
+export const getNextBirthdayBoys = async () =>{
+    return await axios.get(`http://localhost:4000/api/next`); 
+}
+
 
 
 
