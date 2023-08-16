@@ -9,7 +9,9 @@ import IconRedo from "../../assets/img/Redo.png";
 import IconUndo from "../../assets/img/Undo.png";
 import IconPlus from "../../assets/img/iconPlus.svg";
 import "../../assets/styles/workArea.css";
+import { createCard } from "../../api/card";
 const endpoint = "http://localhost:4000/api/upload";
+
 
 function FlexWorkArea({ projectName }) {
   const [canvas, setCanvas] = useState(null);
@@ -22,14 +24,8 @@ function FlexWorkArea({ projectName }) {
   const [currentTextAlign, setCurrentTextAlign] = useState("left");
 
   //rama yahirpro
-  const [canvasData, setCanvasData] = useState("");
+  const [miArreglo, setMiArreglo] = useState([]);
 
-  useEffect(() => {
-    const savedCanvasData = localStorage.getItem(projectName);
-    if (savedCanvasData) {
-      setCanvasData(savedCanvasData);
-    }
-  }, []);
   ///
   useEffect(() => {
     if (canvas) {
@@ -159,6 +155,7 @@ function FlexWorkArea({ projectName }) {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
+    const fileName = file.name;
     let formData = new FormData();
     formData.append("image", file);
     if (file) {
@@ -175,6 +172,7 @@ function FlexWorkArea({ projectName }) {
           console.log(response);
         });
       const imageURL = URL.createObjectURL(file);
+      setMiArreglo([...miArreglo, fileName]);
       handleAddImage(imageURL);
     }
   };
@@ -187,12 +185,20 @@ function FlexWorkArea({ projectName }) {
     a.click();
   };
 
-  const handleSaveChanges = () => {
+  const handleSaveChanges = async() => {
     const objects = canvas.getObjects();
+    const canvasData = JSON.stringify(objects);
+    console.log("Esta llegando al save el nombre de la imagen: ");
+    console.log(miArreglo);
+    let card = {
+      name: projectName,
+      canvas_data: canvasData,
+      images: miArreglo 
+    }
+
     try {
       toast.success("Guardado exitosamente");
-      const canvasData = JSON.stringify(objects);
-      setCanvasData(canvasData);
+      const response  =  await createCard(card);
       localStorage.setItem(projectName, canvasData);
     } catch (error) {
       toast.error("UPSS algo salio mal");

@@ -23,6 +23,13 @@ function FlexTemplates() {
     }
   }
   useEffect(() => {
+    Swal.fire(
+      'The Internet?',
+      'That thing is still around?',
+      'question'
+    )
+
+
     fetchNextBirthdayBoys();
   }, []);
 
