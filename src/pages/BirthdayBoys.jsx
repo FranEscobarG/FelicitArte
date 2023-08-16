@@ -6,9 +6,7 @@ function BirthdayBoys() {
   return (
     <>
       <Navbar btnBack={true} />
-      <div className="container-birthdays">
         <TableBirthday />
-      </div>
     </>
   );
 }

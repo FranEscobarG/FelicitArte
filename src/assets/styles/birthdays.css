@@ -1,13 +1,15 @@
 .container-birthdays{
     width: 100%;
-    padding: 3%;
+    min-height: 90vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    /* background-color: aqua; */
 }
 
 .box-birthdays{
-    width: 85%;
+    width: 75%;
+    margin: 0 4%;
     min-height: 80vh;
     display: flex;
     justify-content: center;

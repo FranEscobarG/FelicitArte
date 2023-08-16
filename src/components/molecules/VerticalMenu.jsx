@@ -1,12 +1,17 @@
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import { differenceInDays, parseISO, startOfDay } from "date-fns";
+import Swal from "sweetalert2";
+import toast from "react-hot-toast";
+import { createBirthdayBoy } from "../../api/birthdayBoy";
 import IconFolder from "../../assets/img/Folder.svg";
 import IconArows from "../../assets/img/DoubleRight.svg";
 import IconBirthday from "../../assets/img/Birthday.svg";
-import { useNavigate } from "react-router-dom";
+import Timer from "../../assets/img/TimeWhite.svg";
 
 const StyledDiv = styled.div`
   min-height: 90vh;
-  width: 15%;
+  width: 18%;
   color: white;
   background-color: #4d6584;
 
@@ -17,19 +22,37 @@ const StyledDiv = styled.div`
   .birthday_boys {
     min-height: 15vh;
     font-size: 1.2rem;
-    text-align: center;
+    padding: 0 5%;
     font-weight: 500;
   }
-  li {
+  .item-birthdayboy {
     margin: 0.5rem 0;
+    display: flex;
+    justify-content: space-between;
+  }
+  .item-birthdayboy .nameB{
+    width: 50%;
+    display: flex;
+    align-items: center;
+    /* background-color: blue; */
+  }
+  .item-birthdayboy .days{
+    width: 45%;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .item-birthdayboy .days img{
+    width: 27%;
   }
 
   .menu-option {
     display: flex;
     align-items: center;
     font-weight: 600;
-    margin-bottom: 2.4rem;
+    margin-bottom: 2.2rem;
     gap: 10px;
+    cursor: pointer;
   }
   button {
     width: 80%;
@@ -50,8 +73,54 @@ const StyledDiv = styled.div`
   }
 `;
 
-function VerticalMenu({ nextbirthdayList }) {
+function VerticalMenu({ fetchNextBirthdayBoys, nextbirthdayList, updateList}) {
   const navigate = useNavigate();
+
+  const handleRecentlyModified = () => {
+    navigate("/home");
+  };
+
+  const handleAddBirthdayBoy = () => {
+    Swal.fire({
+      title: "Agregar Cumpleañero",
+      html:
+        `<label for="swal-input1" class="label-styled">Nombre completo</label> <br>` +
+        `<input id="swal-input1" class="swal2-input border-box-input" placeholder="Nombre completo">` +
+        `<br><br><label for="swal-input2" class="label-styled">Fecha de nacimiento</label>` +
+        `<br><input type="date" id="swal-input2" class="swal2-input border-box-input">`,
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+      cancelButtonColor: "#E83E3E",
+      confirmButtonText: "Enviar",
+      confirmButtonColor: "#5138EE",
+      preConfirm: async () => {
+        if (
+          !document.getElementById("swal-input1").value ||
+          !document.getElementById("swal-input2").value
+        ) {
+          Swal.showValidationMessage("Por favor, rellena ambos campos");
+          console.log("Error datos incompletos");
+        } else {
+          let birthdayBoy = {
+            fullName: document.getElementById("swal-input1").value,
+            birthDate: document.getElementById("swal-input2").value,
+          };
+          try {
+            const response = await createBirthdayBoy(birthdayBoy);
+            console.log(response);
+            fetchNextBirthdayBoys();
+            updateList();
+            toast.success("Guardado exitosamente");
+          } catch (error) {
+            toast.error("UPSS algo salio mal");
+          }
+        }
+      },
+      customClass: {
+        input: "border-box-input",
+      },
+    });
+  };
 
   const handleShowBirthday = () => {
     navigate("/birthdays");
@@ -62,13 +131,32 @@ function VerticalMenu({ nextbirthdayList }) {
       <div>
         <h3>Proximos cumpleañeros:</h3>
         <ul className="birthday_boys">
-          {nextbirthdayList.slice(0, 2).map((birthdayPerson) => (
-            <li key={birthdayPerson.id}>{birthdayPerson.fullName}</li>
-          ))}
+        {nextbirthdayList.slice(0, 2).map((birthdayPerson) => {
+            // Convierte la fecha de cumpleaños a objeto de fecha
+            const birthDate = parseISO(birthdayPerson.birthDate);
+            const currentYear = new Date().getFullYear();
+            // Crea una fecha de cumpleaños para el año actual
+            const currentYearBirthday = new Date(currentYear, birthDate.getMonth(), birthDate.getDate());
+            // Calcula la diferencia en días
+            const currentDate = startOfDay(new Date());
+            let daysDifference = differenceInDays(currentYearBirthday, currentDate);
+            if (daysDifference <= 0) {
+              // Si la fecha de cumpleaños de este año ya pasó, ajusta para el próximo año
+              const nextYearBirthday = new Date(currentYear + 1, birthDate.getMonth(), birthDate.getDate());
+              daysDifference = differenceInDays(nextYearBirthday, currentDate);
+            }
+
+            return (
+              <li className="item-birthdayboy" key={birthdayPerson.id}>
+                <div className="nameB">{birthdayPerson.fullName}</div>
+                <div className="days"><img src={Timer} alt="" /> { daysDifference + " días"} </div>
+              </li>
+            );
+          })}
         </ul>
       </div>
 
-      <div className="menu-option">
+      <div className="menu-option" onClick={handleRecentlyModified}>
         <img src={IconArows} alt="Icono de flecha" />
         <img src={IconFolder} alt="Icono de folder" />
         Modificados recientemente
@@ -77,6 +165,11 @@ function VerticalMenu({ nextbirthdayList }) {
         <img src={IconArows} alt="Icono de flecha" />
         <img src={IconFolder} alt="Icono de folder" />
         Mis plantillas
+      </div>
+      <div className="menu-option" onClick={handleAddBirthdayBoy}>
+        <img src={IconArows} alt="Icono de flecha" />
+        <img src={IconFolder} alt="Icono de folder" />
+        Agregar Cumpleañeros
       </div>
       <button onClick={handleShowBirthday}>
         <img src={IconBirthday} alt="" />
