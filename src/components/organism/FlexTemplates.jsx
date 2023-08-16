@@ -16,6 +16,7 @@ function FlexTemplates() {
   async function fetchNextBirthdayBoys() {
     try {
       const response = await getNextBirthdayBoys();
+      console.log(response.data);
       setNextBirthdayList(response.data);
     } catch (error) {
       console.error("Error fetching birthday boys:", error);
@@ -39,37 +40,65 @@ function FlexTemplates() {
         }
       },
     });
-
     if (name) {
       let claves = Object.keys(localStorage);
-      console.log(claves.length);
-      console.log(name);
-      console.log(typeof name);
       if (claves.length == 0) {
         navigate("/lienzo/" + name);
       } else {
-        for (let i = 0; i < claves.length; i++) {
-          const clave = localStorage.key(i);
-          console.log("Tengo una clave: ", clave);
-
-          if (clave == name) {
-            Swal.fire({
-              title: "Este proyecto ya existe",
-              icon: "error",
-            });
-            navigate("/home");
-            break;
-          } else {
-            navigate("/lienzo/" + name);
-          }
-        }
+        if(claves.includes(name)){
+          Swal.fire({
+            title: "Este proyecto ya existe",
+            icon: "error",
+          });
+          navigate("/home");
+        }else{
+          navigate("/lienzo/" + name);
+        } 
       }
     }
   };
 
   const handleAddTemplate = () => {
-    alert("PARA AGREGAR PLANTILLAS");
-  };
+    Swal.fire({
+      title: "Crear plantilla",
+      html:
+        `<label for="swal-input1" class="label-styled">Nombre del proyecto</label> <br>` +
+        `<input id="swal-input1" class="swal2-input border-box-input" placeholder="Nombre">` +
+        `<br><br><label for="swal-input2" class="label-styled">Selecciona una imagen</label>` +
+        `<br><input type="file" id="swal-input2" class="swal2-input border-box-input">`,
+      showCancelButton: true,
+      cancelButtonText: "Cancelar",
+      cancelButtonColor: "#E83E3E",
+      confirmButtonText: "Enviar",
+      confirmButtonColor: "#5138EE",
+      preConfirm:  () => {
+        if (
+          !document.getElementById("swal-input1").value ||
+          !document.getElementById("swal-input2").value
+        ) {
+          Swal.showValidationMessage("Por favor, rellena ambos campos");
+          console.log("Error datos incompletos");
+        } else {
+          let claves = Object.keys(localStorage);
+          if(claves.includes(document.getElementById("swal-input1").value)){
+            Swal.fire({
+              title: "Este proyecto ya existe",
+              icon: "error",
+            });
+          }else{
+            alert("Aca ira la logica de agregar plantilla");
+            try {
+              console.log(document.getElementById("swal-input1").value);
+              console.log(document.getElementById("swal-input2").value)
+              alert("todo bien")
+            } catch (error) {
+              alert("error")
+            }
+          }
+        }
+      }
+    });
+  }
   const handleUpdate = () => {
     console.log("Lista actualizada")
   };
