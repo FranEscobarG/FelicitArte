@@ -76,7 +76,7 @@ function FlexTemplates() {
 
   const mapeo = () => {
     let claves = Object.keys(localStorage);
-    return claves.slice(0, 8).map((nombre) => <ButtonCard key={nombre} text={nombre} />);
+    return claves.slice(0, 6).map((nombre) => <ButtonCard key={nombre} text={nombre} />);
   };
 
   return (

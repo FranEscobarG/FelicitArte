@@ -6,7 +6,7 @@
 
 .flex-templates{
     width: 85%;
-    padding: 4% 5%;
+    padding: 4% 5% 4% 7%;
     display: block;
 }
 
@@ -19,11 +19,11 @@
 }
 .plantillas{
     width: 100%;
-    margin-top: 6%;
+    margin-top: 5%;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    grid-gap: 5rem;
+    grid-gap: 5.5rem;
 }
 
 .border-box-input {

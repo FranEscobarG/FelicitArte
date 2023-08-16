@@ -11,7 +11,7 @@ import Timer from "../../assets/img/TimeWhite.svg";
 
 const StyledDiv = styled.div`
   min-height: 90vh;
-  width: 18%;
+  width: 20%;
   color: white;
   background-color: #4d6584;
 
@@ -49,7 +49,8 @@ const StyledDiv = styled.div`
   .menu-option {
     display: flex;
     align-items: center;
-    font-weight: 600;
+    font-size: 1.1rem;
+    font-weight: 500;
     margin-bottom: 2.2rem;
     gap: 10px;
     cursor: pointer;
@@ -78,6 +79,9 @@ function VerticalMenu({ fetchNextBirthdayBoys, nextbirthdayList, updateList}) {
 
   const handleRecentlyModified = () => {
     navigate("/home");
+  };
+  const handleMyTemplates = () => {
+    navigate("/templates");
   };
 
   const handleAddBirthdayBoy = () => {
@@ -161,7 +165,7 @@ function VerticalMenu({ fetchNextBirthdayBoys, nextbirthdayList, updateList}) {
         <img src={IconFolder} alt="Icono de folder" />
         Modificados recientemente
       </div>
-      <div className="menu-option">
+      <div className="menu-option" onClick={handleMyTemplates}>
         <img src={IconArows} alt="Icono de flecha" />
         <img src={IconFolder} alt="Icono de folder" />
         Mis plantillas

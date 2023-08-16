@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import AnimalFolder from "../../assets/img/Animal-Folder.svg"
 
 const StyledDiv = styled.div`
-  width: 20%;
-  height: 40vh;
+  width: 24%;
+  height: 45vh;
   display: flex;
   flex-direction: column;
   align-items: center;

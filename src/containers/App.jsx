@@ -9,6 +9,7 @@ import BirthdayBoys from "../pages/BirthdayBoys";
 import Projects from "../pages/Projects";
 import UserContext from "../context/UserContext";
 import ProtectedRoute from "./ProtectedRoute";
+import MyTemplates from "../pages/MyTemplates";
 
 function App() {
   // estado en true para pruebas
@@ -25,6 +26,7 @@ function App() {
 
           <Route element={<ProtectedRoute session={isLoged} />}>
             <Route path="/home" element={<Home />} />
+            <Route path="/templates" element={<MyTemplates />} />
             <Route path="/birthdays" element={<BirthdayBoys />} />
             <Route path="/lienzo/:projectName" element={<WorkArea />} />
             <Route path="/projects/:projectName" element={<Projects />} />
