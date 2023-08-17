@@ -187,7 +187,7 @@ function FlexWorkArea({ projectName }) {
 
   const handleSaveChanges = async() => {
     const objects = canvas.getObjects();
-    const canvasData = JSON.stringify(objects);
+    const canvasData = JSON.stringify(objects); 
     console.log("Esta llegando al save el nombre de la imagen: ");
     console.log(miArreglo);
     let card = {

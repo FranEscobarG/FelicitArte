@@ -8,28 +8,61 @@ import ButtonTemplate from "../atoms/ButtonTemplate";
 import IconPlus from "../../assets/img/iconPlus.svg";
 import ButtonCard from "../atoms/ButtonCard";
 import "../../assets/styles/flexTemplates.css";
+import { getAllCard } from "../../api/card";
+import globos from "../../assets/img/globos.jpg"
 
 function FlexTemplates() {
   const navigate = useNavigate();
   const [nextbirthdayList, setNextBirthdayList] = useState([]);
+  const [cardList, setCardList] = useState([]);
 
   async function fetchNextBirthdayBoys() {
     try {
       const response = await getNextBirthdayBoys();
+      console.log("Imprimiendo los cumpleañeros");
       console.log(response.data);
+      let birthdayboys = response.data;
+      let birthdayMessage;
+      const currentDate = new Date();
+
+      const birthdayToday = birthdayboys.filter((birthdayboy) => {
+        const birthDate = new Date(birthdayboy.birthDate);
+        return birthDate.getMonth() === currentDate.getMonth() && birthDate.getDate() === currentDate.getDate();
+      });
+
+      if (birthdayToday.length > 0) {
+        birthdayMessage = `Hoy es cumpleaños de ${birthdayToday.map((birthdayboy) => birthdayboy.fullName).join(', ')}`;
+        Swal.fire({
+          title: birthdayMessage,
+          text: 'Felicítalo en este día tan especial',
+          imageUrl: globos,
+          imageWidth: 200, // Ancho de la imagen en píxeles
+          imageHeight: 200, // Alto de la imagen en píxeles
+        });
+      } else {
+        birthdayMessage = 'Nadie cumple años hoy';
+        console.log(birthdayMessage);
+      }
+
       setNextBirthdayList(response.data);
     } catch (error) {
       console.error("Error fetching birthday boys:", error);
     }
   }
+
+  async function getCardList() {
+    try{
+      const response = await getAllCard();
+      console.log("Imprimiendo tarjetas");
+      console.log(response.data);
+      setCardList(response.data);
+    }catch(error){
+      console.error("Error fetching cards:", error);
+    }
+  }
+
   useEffect(() => {
-    Swal.fire(
-      'The Internet?',
-      'That thing is still around?',
-      'question'
-    )
-
-
+    getCardList();
     fetchNextBirthdayBoys();
   }, []);
 
@@ -48,11 +81,11 @@ function FlexTemplates() {
       },
     });
     if (name) {
-      let claves = Object.keys(localStorage);
-      if (claves.length == 0) {
+      if(cardList.length == 0) {
         navigate("/lienzo/" + name);
-      } else {
-        if(claves.includes(name)){
+      }else{
+        const existProject = cardList.some(project => project.name === name);
+        if(existProject) {
           Swal.fire({
             title: "Este proyecto ya existe",
             icon: "error",
@@ -60,7 +93,7 @@ function FlexTemplates() {
           navigate("/home");
         }else{
           navigate("/lienzo/" + name);
-        } 
+        }
       }
     }
   };
@@ -112,7 +145,7 @@ function FlexTemplates() {
 
   const mapeo = () => {
     let claves = Object.keys(localStorage);
-    return claves.slice(0, 6).map((nombre) => <ButtonCard key={nombre} text={nombre} />);
+    return cardList.slice(0, 6).map((card) => <ButtonCard key={card.id} text={card.name} />);
   };
 
   return (
@@ -131,7 +164,7 @@ function FlexTemplates() {
             text={"Agregar plantilla"}
           />
         </div>
-        <div className="plantillas">{mapeo()}</div>
+      <div className="plantillas">{mapeo()}</div>
 
         <Toaster />
       </div>

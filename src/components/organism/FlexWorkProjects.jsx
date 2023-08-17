@@ -8,9 +8,11 @@ import IconRedo from "../../assets/img/Redo.png";
 import IconUndo from "../../assets/img/Undo.png";
 import IconPlus from "../../assets/img/iconPlus.svg";
 import "../../assets/styles/workArea.css";
+import { getCard } from "../../api/card";
+import { updateCard } from "../../api/card";
 const endpoint = "http://localhost:4000/api/upload";
 
-function FlexWorkProjects({ projectName }) {
+function FlexWorkProjects({projectName}) {
   const [canvas, setCanvas] = useState(null);
   const [undoStack, setUndoStack] = useState([]);
   const [redoStack, setRedoStack] = useState([]);
@@ -21,17 +23,23 @@ function FlexWorkProjects({ projectName }) {
   const [currentTextAlign, setCurrentTextAlign] = useState("left");
 
   //rama yahirpro
-  const [canvasData, setCanvasData] = useState("");
+  //const [canvasData, setCanvasData] = useState("");
+  const [cardList, setCardList] = useState("");
+  const [miArreglo, setMiArreglo] = useState([]);
+
 
   useEffect(() => {
-    if (canvasData) {
-      handleLoad();
-    }
-    const savedCanvasData = localStorage.getItem(projectName);
-    if (savedCanvasData) {
-      setCanvasData(savedCanvasData);
-    }
-  }, [canvasData]);
+    console.log("Obteniendo la tarjeta")
+    getCardList(); 
+    
+  }, []);
+
+
+  useEffect(() => {
+    console.log("Aca debio de recargar porque ya hubo un cambio")
+    handleLoad();
+  }, [cardList]);
+
   ///
 
   useEffect(() => {
@@ -40,6 +48,19 @@ function FlexWorkProjects({ projectName }) {
       canvas.freeDrawingBrush.width = currentLineWidth;
     }
   }, [canvas, currentLineWidth]);
+
+  async function getCardList() {
+    try{
+      const response = await getCard(projectName);
+      console.log("Imprimiendo tarjetas");
+      console.log(typeof(response.data.images));
+      let imagenes = JSON.parse(response.data.images)
+      setMiArreglo(imagenes);
+      setCardList(response.data);
+    }catch(error){
+      console.error("Error fetching cards:", error);
+    }
+  }
 
   const handleCanvasReady = (canvas) => {
     setCanvas(canvas);
@@ -162,6 +183,7 @@ function FlexWorkProjects({ projectName }) {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
+    const fileName = file.name;
     let formData = new FormData();
     formData.append("image", file);
     if (file) {
@@ -178,6 +200,7 @@ function FlexWorkProjects({ projectName }) {
           console.log(response);
         });
       const imageURL = URL.createObjectURL(file);
+      setMiArreglo([...miArreglo, fileName]);
       handleAddImage(imageURL);
     }
   };
@@ -190,22 +213,35 @@ function FlexWorkProjects({ projectName }) {
     a.click();
   };
 
-  const handleSaveChanges = () => {
+  const handleSaveChanges = async() => {
     const objects = canvas.getObjects();
-
+    const canvasData = JSON.stringify(objects);
+    console.log("Imprimiendo mi arreglo antes de guardar: ");
+    console.log(miArreglo);
     try {
       toast.success("Guardado exitosamente");
-      const canvasData = JSON.stringify(objects);
-      setCanvasData(canvasData);
-      localStorage.setItem(projectName, canvasData);
+      let cardObject = {
+        id: cardList.id,
+        canvas_data: canvasData,
+        images: miArreglo
+      }
+      const response = await updateCard(cardList.id, cardObject);
+      /* setCanvasData(canvasData);
+      localStorage.setItem(projectName, canvasData); */
     } catch (error) {
       toast.error("UPSS algo salio mal");
     }
   };
 
-  const handleLoad = () => {
-    if (canvasData) {
-      const objects = JSON.parse(canvasData);
+  const handleLoad = () => { 
+    if (cardList) {
+
+      console.log("Aca pondre la logica de agregar imagen");
+
+
+
+
+      const objects = JSON.parse(cardList.canvas_data);
       canvas.loadFromJSON({ objects: objects }, canvas.renderAll.bind(canvas));
     }
   };

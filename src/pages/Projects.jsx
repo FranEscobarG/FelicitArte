@@ -4,7 +4,7 @@ import FlexWorkProjects from "../components/organism/FlexWorkProjects";
 function Projects() {
     const { projectName } = useParams();
     console.log("Recuperando el parametro en Projects");
-    console.log(projectName);
+    console.log(projectName);  
     return ( 
         <>
         <Navbar btnBack={true} />

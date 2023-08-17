@@ -13,8 +13,15 @@ import MyTemplates from "../pages/MyTemplates";
 
 function App() {
   // estado en true para pruebas
-  const [isLoged, setIsLoged] = useState(true); // cambuar a false para su funcionamiento
-  const [userName, setUserName] = useState("");
+  const [isLoged, setIsLoged] = useState(
+    () => window.localStorage.getItem("loggedUser") !== null
+  );
+  const [userName, setUserName] = useState(
+    () => {
+      const loggedUser = window.localStorage.getItem("loggedUser");
+      return loggedUser ? JSON.parse(loggedUser).fullName : "";
+    }
+  );
 
   return (
     <BrowserRouter>
@@ -32,7 +39,7 @@ function App() {
             <Route path="/projects/:projectName" element={<Projects />} />
           </Route>
 
-          {/* <Route path="/*" element={<NotFound />} /> */}
+          
         </Routes>
       </UserContext.Provider>
     </BrowserRouter>

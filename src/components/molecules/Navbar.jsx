@@ -65,6 +65,9 @@ function Navbar({btnBack}) {
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
+        // Elimina información del usuario del localStorage
+        window.localStorage.removeItem("loggedUser");
+        // Restablecer el estado del contexto
         setIsLoged(false);
         setUserName("");
       }
