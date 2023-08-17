@@ -10,10 +10,12 @@ import IconUndo from "../../assets/img/Undo.png";
 import IconPlus from "../../assets/img/iconPlus.svg";
 import "../../assets/styles/workArea.css";
 import { createCard } from "../../api/card";
+import { useNavigate } from "react-router-dom";
 const endpoint = "http://localhost:4000/api/upload";
 
 
 function FlexWorkArea({ projectName }) {
+  const navigate = useNavigate();
   const [canvas, setCanvas] = useState(null);
   const [undoStack, setUndoStack] = useState([]);
   const [redoStack, setRedoStack] = useState([]);
@@ -195,11 +197,11 @@ function FlexWorkArea({ projectName }) {
       canvas_data: canvasData,
       images: miArreglo 
     }
-
     try {
       toast.success("Guardado exitosamente");
       const response  =  await createCard(card);
       localStorage.setItem(projectName, canvasData);
+      navigate("/home");  
     } catch (error) {
       toast.error("UPSS algo salio mal");
     }

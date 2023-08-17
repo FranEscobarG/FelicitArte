@@ -67,6 +67,7 @@ function Navbar({btnBack}) {
       if (result.isConfirmed) {
         // Elimina información del usuario del localStorage
         window.localStorage.removeItem("loggedUser");
+        localStorage.removeItem('secondAlertShown');
         // Restablecer el estado del contexto
         setIsLoged(false);
         setUserName("");

@@ -32,13 +32,20 @@ function FlexTemplates() {
 
       if (birthdayToday.length > 0) {
         birthdayMessage = `Hoy es cumpleaños de ${birthdayToday.map((birthdayboy) => birthdayboy.fullName).join(', ')}`;
-        Swal.fire({
-          title: birthdayMessage,
-          text: 'Felicítalo en este día tan especial',
-          imageUrl: globos,
-          imageWidth: 200, // Ancho de la imagen en píxeles
-          imageHeight: 200, // Alto de la imagen en píxeles
-        });
+        // Verificar si la alerta ya se mostró antes en esta sesión
+        if (!localStorage.getItem('secondAlertShown')) {
+          // Mostrar la alerta
+          Swal.fire({
+            title: birthdayMessage,
+            text: 'Felicítalo en este día tan especial',
+            imageUrl: globos,
+            imageWidth: 200,
+            imageHeight: 200,
+          });
+
+          // Marcar que la alerta ya se mostró
+          localStorage.setItem('secondAlertShown', 'true');
+        }
       } else {
         birthdayMessage = 'Nadie cumple años hoy';
         console.log(birthdayMessage);

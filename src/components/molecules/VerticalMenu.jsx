@@ -140,20 +140,32 @@ function VerticalMenu({ fetchNextBirthdayBoys, nextbirthdayList, updateList}) {
             const birthDate = parseISO(birthdayPerson.birthDate);
             const currentYear = new Date().getFullYear();
             // Crea una fecha de cumpleaños para el año actual
-            const currentYearBirthday = new Date(currentYear, birthDate.getMonth(), birthDate.getDate());
+            const currentYearBirthday = new Date( currentYear, birthDate.getMonth(), birthDate.getDate());
             // Calcula la diferencia en días
             const currentDate = startOfDay(new Date());
-            let daysDifference = differenceInDays(currentYearBirthday, currentDate);
+            let daysDifference = differenceInDays(
+              currentYearBirthday,
+              currentDate
+            );
+            // Verifica si la fecha de cumpleaños es hoy
+            const isBirthdayToday = daysDifference === 0;
             if (daysDifference <= 0) {
               // Si la fecha de cumpleaños de este año ya pasó, ajusta para el próximo año
-              const nextYearBirthday = new Date(currentYear + 1, birthDate.getMonth(), birthDate.getDate());
+              const nextYearBirthday = new Date(
+                currentYear + 1,
+                birthDate.getMonth(),
+                birthDate.getDate()
+              );
               daysDifference = differenceInDays(nextYearBirthday, currentDate);
             }
 
             return (
               <li className="item-birthdayboy" key={birthdayPerson.id}>
                 <div className="nameB">{birthdayPerson.fullName}</div>
-                <div className="days"><img src={Timer} alt="" /> { daysDifference + " días"} </div>
+                <div className="days">
+                  <img src={Timer} alt="" />{" "}
+                  {isBirthdayToday ? "hoy" : daysDifference + " días"}
+                </div>
               </li>
             );
           })}
