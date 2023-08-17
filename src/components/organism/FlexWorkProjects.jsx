@@ -235,14 +235,34 @@ function FlexWorkProjects({projectName}) {
 
   const handleLoad = () => { 
     if (cardList) {
+      ///
 
       console.log("Aca pondre la logica de agregar imagen");
+      let cards = cardList.canvas_data;
+      const hola = JSON.parse(cards);
+      console.log(hola);
+      console.log(typeof(hola))
 
+      const objectsWithImages = hola.map((obj) => {
+        if (obj.type === "image") {
+          return { ...obj, src: "http://localhost:4000/1692300080954-text-1691932942492.png" }; // Reemplaza con la URL correcta
+        }
+        return obj;
+      });
+      
+      //console.log(hola);
 
-
-
+      console.log(typeof(objectsWithImages));
       const objects = JSON.parse(cardList.canvas_data);
-      canvas.loadFromJSON({ objects: objects }, canvas.renderAll.bind(canvas));
+      canvas.loadFromJSON({ objects: objectsWithImages }, canvas.renderAll.bind(canvas));
+     /*  const objectsWithImages = cards.map((obj) => { 
+        if (obj.type === "image") {
+          obj.src = "http://localhost:4000/1691717838471-CS2.png";
+        }
+        return obj;
+      }); */
+
+     
     }
   };
 
