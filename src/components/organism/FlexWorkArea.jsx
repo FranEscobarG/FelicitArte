@@ -1,5 +1,4 @@
-// FlexWorkArea.jsx
-import { useState, useEffect } from "react";
+  import { useState, useEffect } from "react";
 import { fabric } from "fabric";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
@@ -13,7 +12,6 @@ import { createCard } from "../../api/card";
 import { useNavigate } from "react-router-dom";
 const endpoint = "http://localhost:4000/api/upload";
 
-
 function FlexWorkArea({ projectName }) {
   const navigate = useNavigate();
   const [canvas, setCanvas] = useState(null);
@@ -24,10 +22,9 @@ function FlexWorkArea({ projectName }) {
   const [currentFontFamily, setCurrentFontFamily] = useState("Arial");
   const [currentFontSize, setCurrentFontSize] = useState(18);
   const [currentTextAlign, setCurrentTextAlign] = useState("left");
-
+  const [canvasBackgroundColor, setCanvasBackgroundColor] = useState("#ffffff");
 
   const [miArreglo, setMiArreglo] = useState([]);
-
 
   useEffect(() => {
     if (canvas) {
@@ -131,6 +128,7 @@ function FlexWorkArea({ projectName }) {
     if (canvas) {
       canvas.freeDrawingBrush.color = color;
       setCurrentColor(color);
+      setCanvasBackgroundColor(color);
     }
   };
 
@@ -161,7 +159,7 @@ function FlexWorkArea({ projectName }) {
 
     const newFileName = `${projectName}-${fileName}`;
     const modifiedFild = new File([file], newFileName, { type: file.type });
-    let formData = new FormData();  
+    let formData = new FormData();
     formData.append("image", modifiedFild);
     if (file) {
       axios({
@@ -190,26 +188,33 @@ function FlexWorkArea({ projectName }) {
     a.click();
   };
 
-  const handleSaveChanges = async() => {
+  const handleSaveChanges = async () => {
     const objects = canvas.getObjects();
-    const canvasData = JSON.stringify(objects); 
+    const canvasData = JSON.stringify(objects);
     console.log("Esta llegando al save el nombre de la imagen: ");
     console.log(miArreglo);
     let card = {
       name: projectName,
       canvas_data: canvasData,
-      images: miArreglo 
-    }
+      images: miArreglo,
+      background: canvas.backgroundColor
+    };
     try {
+      const response = await createCard(card);
       toast.success("Guardado exitosamente");
-      const response  =  await createCard(card);
       localStorage.setItem(projectName, canvasData);
-      navigate("/home");  
+      navigate("/home");
     } catch (error) {
       toast.error("UPSS algo salio mal");
     }
   };
 
+  const handleChangeCanvasBackgroundColor = (color) => {
+    if (canvas) {
+      canvas.setBackgroundColor(color, canvas.renderAll.bind(canvas));
+      setCanvasBackgroundColor(color);
+    }
+  };
 
   return (
     <div className="flex-work_area">
@@ -253,7 +258,16 @@ function FlexWorkArea({ projectName }) {
             <img src={IconPlus} alt="" /> Agregar Imagen
           </label>
         </div>
-        
+        <div className="backgroundcolor">
+          <input
+            id="background"
+            type="color"
+            value={canvasBackgroundColor}
+            onChange={(e) => handleChangeCanvasBackgroundColor(e.target.value)}
+          />
+          <label htmlFor="background">Cambiar color de fondo</label>
+        </div>
+
         <div className="buttons-right">
           <Toaster />
           <button className="btn-save" onClick={handleSaveChanges}>

@@ -3,9 +3,11 @@ import ButtonTool from "../atoms/ButtonTool";
 import BtnAddText from "../../assets/img/BtnText.png"
 import IconAddForm from "../../assets/img/Diversity.png"
 import IconDraw from "../../assets/img/Edit.png"
+import IconTemplates from "../../assets/img/Bookmark.svg"
 import IconCirculo from "../../assets/img/circulo.png"
 import IconTriangulo from "../../assets/img/triangulo.png"
 import IconCuadrado from "../../assets/img/cuadrado.png"
+import { useNavigate } from "react-router-dom";
 
 function ToolsLeft({
   onAddShape,
@@ -23,6 +25,7 @@ function ToolsLeft({
   onSetTextAlign,
   canvas,
 }) {
+  const navigate = useNavigate();
   const [lineWidth, setLineWidth] = useState(currentLineWidth);
   const [showShapeOptions, setShowShapeOptions] = useState(false);
   const [showTextOptions, setShowTextOptions] = useState(false);
@@ -39,6 +42,9 @@ function ToolsLeft({
     }
   };
 
+  const handleProjects = () => {
+    navigate("/templates")
+  };
 
   return (
     <div className="tools-left">
@@ -103,7 +109,10 @@ function ToolsLeft({
           </div>
         )} 
       
+      <ButtonTool img={IconTemplates} handle={handleProjects} text={"Proyectos"} />
+
       <input
+        className="color"
         type="color"
         value={currentColor}
         onChange={(e) => onSetColor(e.target.value)}
