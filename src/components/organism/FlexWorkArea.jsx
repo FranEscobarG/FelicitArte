@@ -25,10 +25,10 @@ function FlexWorkArea({ projectName }) {
   const [currentFontSize, setCurrentFontSize] = useState(18);
   const [currentTextAlign, setCurrentTextAlign] = useState("left");
 
-  //rama yahirpro
+
   const [miArreglo, setMiArreglo] = useState([]);
 
-  ///
+
   useEffect(() => {
     if (canvas) {
       canvas.isDrawingMode = false;
@@ -158,8 +158,11 @@ function FlexWorkArea({ projectName }) {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     const fileName = file.name;
-    let formData = new FormData();
-    formData.append("image", file);
+
+    const newFileName = `${projectName}-${fileName}`;
+    const modifiedFild = new File([file], newFileName, { type: file.type });
+    let formData = new FormData();  
+    formData.append("image", modifiedFild);
     if (file) {
       axios({
         method: "POST",
@@ -174,7 +177,7 @@ function FlexWorkArea({ projectName }) {
           console.log(response);
         });
       const imageURL = URL.createObjectURL(file);
-      setMiArreglo([...miArreglo, fileName]);
+      setMiArreglo([...miArreglo, newFileName]);
       handleAddImage(imageURL);
     }
   };
@@ -207,15 +210,6 @@ function FlexWorkArea({ projectName }) {
     }
   };
 
-  /* const handleLoad = () => {
-      if (canvasData) {
-        const objects = JSON.parse(canvasData);
-        canvas.loadFromJSON(
-          { objects: objects },
-          canvas.renderAll.bind(canvas)
-        );
-      }
-    }; */
 
   return (
     <div className="flex-work_area">
@@ -262,7 +256,6 @@ function FlexWorkArea({ projectName }) {
         
         <div className="buttons-right">
           <Toaster />
-          {/*   <button className="btn-restore" onClick={handleLoad}>Cargar cambios</button> */}
           <button className="btn-save" onClick={handleSaveChanges}>
             Guardar cambios
           </button>

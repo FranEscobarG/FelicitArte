@@ -23,7 +23,6 @@ function FlexWorkProjects({projectName}) {
   const [currentTextAlign, setCurrentTextAlign] = useState("left");
 
   //rama yahirpro
-  //const [canvasData, setCanvasData] = useState("");
   const [cardList, setCardList] = useState("");
   const [miArreglo, setMiArreglo] = useState([]);
 
@@ -184,8 +183,11 @@ function FlexWorkProjects({projectName}) {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     const fileName = file.name;
-    let formData = new FormData();
-    formData.append("image", file);
+
+    const newFileName = `${projectName}-${fileName}`;
+    const modifiedFild = new File([file], newFileName, { type: file.type });
+    let formData = new FormData();  
+    formData.append("image", modifiedFild);
     if (file) {
       axios({
         method: "POST",
@@ -200,10 +202,10 @@ function FlexWorkProjects({projectName}) {
           console.log(response);
         });
       const imageURL = URL.createObjectURL(file);
-      setMiArreglo([...miArreglo, fileName]);
+      setMiArreglo([...miArreglo, newFileName]);
       handleAddImage(imageURL);
     }
-  };
+  };    
 
   const handleGenerateImage = () => {
     const dataURL = canvas.toDataURL("image/jpg");
@@ -226,8 +228,6 @@ function FlexWorkProjects({projectName}) {
         images: miArreglo
       }
       const response = await updateCard(cardList.id, cardObject);
-      /* setCanvasData(canvasData);
-      localStorage.setItem(projectName, canvasData); */
     } catch (error) {
       toast.error("UPSS algo salio mal");
     }
@@ -236,33 +236,27 @@ function FlexWorkProjects({projectName}) {
   const handleLoad = () => { 
     if (cardList) {
       ///
-
-      console.log("Aca pondre la logica de agregar imagen");
+      console.log("imprimiendo las imagenes en el handleload");
+      console.log(miArreglo);
       let cards = cardList.canvas_data;
-      const hola = JSON.parse(cards);
-      console.log(hola);
-      console.log(typeof(hola))
+      const cardsData = JSON.parse(cards);
+      
 
-      const objectsWithImages = hola.map((obj) => {
-        if (obj.type === "image") {
-          return { ...obj, src: "http://localhost:4000/1692300080954-text-1691932942492.png" }; // Reemplaza con la URL correcta
+      ////////
+      const orderedObjects = [...cardsData].sort((a, b) => {
+        if (a.type === "image" && b.type !== "image") return -1;
+        if (a.type !== "image" && b.type === "image") return 1;
+        return 0;
+      });
+
+      const objectsWithImages = orderedObjects.map((obj, index) => {
+        if (obj.type === "image" && miArreglo[index]) {
+          return { ...obj, src: `http://localhost:4000/${miArreglo[index]}` };
         }
         return obj;
       });
-      
-      //console.log(hola);
 
-      console.log(typeof(objectsWithImages));
-      const objects = JSON.parse(cardList.canvas_data);
-      canvas.loadFromJSON({ objects: objectsWithImages }, canvas.renderAll.bind(canvas));
-     /*  const objectsWithImages = cards.map((obj) => { 
-        if (obj.type === "image") {
-          obj.src = "http://localhost:4000/1691717838471-CS2.png";
-        }
-        return obj;
-      }); */
-
-     
+      canvas.loadFromJSON({ objects: objectsWithImages }, canvas.renderAll.bind(canvas));     
     }
   };
 
