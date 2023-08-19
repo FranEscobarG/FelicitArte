@@ -22,7 +22,7 @@ function FlexWorkProjects({projectName}) {
   const [currentFontSize, setCurrentFontSize] = useState(18);
   const [currentTextAlign, setCurrentTextAlign] = useState("left");
   const [canvasBackgroundColor, setCanvasBackgroundColor] = useState("");
-
+  
   //rama yahirpro
   const [cardList, setCardList] = useState("");
   const [miArreglo, setMiArreglo] = useState([]);
@@ -191,10 +191,6 @@ function FlexWorkProjects({projectName}) {
     let formData = new FormData();  
     formData.append("image", modifiedFild);
 
-    const image = new Image();
-    image.src = URL.createObjectURL(modifiedFile);
-    image.crossOrigin = "anonymous"; 
-
     if (file) {
       axios({
         method: "POST",
@@ -210,17 +206,18 @@ function FlexWorkProjects({projectName}) {
         });
       const imageURL = URL.createObjectURL(file);
       setMiArreglo([...miArreglo, newFileName]);
-      handleAddImage(image.src);
+      handleAddImage(imageURL);
     }
   };    
 
   const handleGenerateImage = () => {
-    const dataURL = canvas.toDataURL("image/png");
+    const dataURL = canvas.toDataURL("image/jpeg");
     const a = document.createElement("a");
-    a.download = "TarjeaCumple.";
+    a.download = "TarjeaCumple.jpg";
     a.href = dataURL;
     a.click();
   };
+
 
   const handleSaveChanges = async() => {
     const objects = canvas.getObjects();
@@ -261,7 +258,7 @@ function FlexWorkProjects({projectName}) {
 
       const objectsWithImages = orderedObjects.map((obj, index) => {
         if (obj.type === "image" && miArreglo[index]) {
-          return { ...obj, src: `http://localhost:4000/${miArreglo[index]}` };
+          return { ...obj, src: `http://localhost:4000/${miArreglo[index]}`,  crossOrigin: "anonymous"  };
         }
         return obj;
       });
@@ -271,7 +268,7 @@ function FlexWorkProjects({projectName}) {
       canvas.loadFromJSON({ objects: objectsWithImages }, () => {
         canvas.setBackgroundColor(canvasBackgroundColor, canvas.renderAll.bind(canvas));
         canvas.renderAll();
-      });
+      }); 
 
 
     }
