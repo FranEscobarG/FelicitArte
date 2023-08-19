@@ -21,7 +21,8 @@ function FlexWorkProjects({projectName}) {
   const [currentFontFamily, setCurrentFontFamily] = useState("Arial");
   const [currentFontSize, setCurrentFontSize] = useState(18);
   const [currentTextAlign, setCurrentTextAlign] = useState("left");
-
+  const [canvasBackgroundColor, setCanvasBackgroundColor] = useState("");
+  
   //rama yahirpro
   const [cardList, setCardList] = useState("");
   const [miArreglo, setMiArreglo] = useState([]);
@@ -30,7 +31,6 @@ function FlexWorkProjects({projectName}) {
   useEffect(() => {
     console.log("Obteniendo la tarjeta")
     getCardList(); 
-    
   }, []);
 
 
@@ -51,11 +51,12 @@ function FlexWorkProjects({projectName}) {
   async function getCardList() {
     try{
       const response = await getCard(projectName);
-      console.log("Imprimiendo tarjetas");
-      console.log(typeof(response.data.images));
+      console.log("Imprimiendo el color de fondo de la BD");
+      console.log(response.data.background);
       let imagenes = JSON.parse(response.data.images)
       setMiArreglo(imagenes);
       setCardList(response.data);
+      setCanvasBackgroundColor(response.data.background);
     }catch(error){
       console.error("Error fetching cards:", error);
     }
@@ -156,6 +157,7 @@ function FlexWorkProjects({projectName}) {
     if (canvas) {
       canvas.freeDrawingBrush.color = color;
       setCurrentColor(color);
+      setCanvasBackgroundColor(color);
     }
   };
 
@@ -188,6 +190,7 @@ function FlexWorkProjects({projectName}) {
     const modifiedFild = new File([file], newFileName, { type: file.type });
     let formData = new FormData();  
     formData.append("image", modifiedFild);
+
     if (file) {
       axios({
         method: "POST",
@@ -208,24 +211,28 @@ function FlexWorkProjects({projectName}) {
   };    
 
   const handleGenerateImage = () => {
-    const dataURL = canvas.toDataURL("image/jpg");
+    const dataURL = canvas.toDataURL("image/jpeg");
     const a = document.createElement("a");
     a.download = "TarjeaCumple.jpg";
     a.href = dataURL;
     a.click();
   };
 
+
   const handleSaveChanges = async() => {
     const objects = canvas.getObjects();
     const canvasData = JSON.stringify(objects);
     console.log("Imprimiendo mi arreglo antes de guardar: ");
     console.log(miArreglo);
+    const canvasColor = canvas.backgroundColor; // Obtener el color de fondo del canvas
+    console.log("Color de fondo del canvas:",canvasColor); 
     try {
       toast.success("Guardado exitosamente");
       let cardObject = {
         id: cardList.id,
         canvas_data: canvasData,
-        images: miArreglo
+        images: miArreglo,
+        background: canvas.backgroundColor
       }
       const response = await updateCard(cardList.id, cardObject);
     } catch (error) {
@@ -251,12 +258,26 @@ function FlexWorkProjects({projectName}) {
 
       const objectsWithImages = orderedObjects.map((obj, index) => {
         if (obj.type === "image" && miArreglo[index]) {
-          return { ...obj, src: `http://localhost:4000/${miArreglo[index]}` };
+          return { ...obj, src: `http://localhost:4000/${miArreglo[index]}`,  crossOrigin: "anonymous"  };
         }
         return obj;
       });
 
-      canvas.loadFromJSON({ objects: objectsWithImages }, canvas.renderAll.bind(canvas));     
+     // canvas.loadFromJSON({ objects: objectsWithImages }, canvas.renderAll.bind(canvas));     
+      
+      canvas.loadFromJSON({ objects: objectsWithImages }, () => {
+        canvas.setBackgroundColor(canvasBackgroundColor, canvas.renderAll.bind(canvas));
+        canvas.renderAll();
+      }); 
+
+
+    }
+  };
+
+  const handleChangeCanvasBackgroundColor = (color) => {
+    if (canvas) {
+      canvas.setBackgroundColor(color, canvas.renderAll.bind(canvas));
+      setCanvasBackgroundColor(color);
     }
   };
 
@@ -301,6 +322,15 @@ function FlexWorkProjects({projectName}) {
           <label htmlFor="image-upload" className="upload-label">
             <img src={IconPlus} alt="" /> Agregar Imagen
           </label>
+        </div>
+        <div className="backgroundcolor">
+          <input
+            id="background"
+            type="color"
+            value={canvasBackgroundColor}
+            onChange={(e) => handleChangeCanvasBackgroundColor(e.target.value)}
+          />
+          <label htmlFor="background">Cambiar color de fondo</label>
         </div>
 
         <div className="buttons-right">

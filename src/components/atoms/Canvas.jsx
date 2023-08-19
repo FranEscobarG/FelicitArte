@@ -1,6 +1,6 @@
 import { FabricJSCanvas } from "fabricjs-react";
 
-function Canvas({ onCanvasReady, onAddImage }) {
+function Canvas({ onCanvasReady }) {
 
   return (
     <div className="container-canvas">

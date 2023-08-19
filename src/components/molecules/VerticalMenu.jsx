@@ -135,7 +135,7 @@ function VerticalMenu({ fetchNextBirthdayBoys, nextbirthdayList, updateList}) {
       <div>
         <h3>Proximos cumpleañeros:</h3>
         <ul className="birthday_boys">
-        {nextbirthdayList.slice(0, 2).map((birthdayPerson) => {
+          {nextbirthdayList.slice(0, 3).map((birthdayPerson) => {
             // Convierte la fecha de cumpleaños a objeto de fecha
             const birthDate = parseISO(birthdayPerson.birthDate);
             const currentYear = new Date().getFullYear();
@@ -169,8 +169,11 @@ function VerticalMenu({ fetchNextBirthdayBoys, nextbirthdayList, updateList}) {
               </li>
             );
           })}
+
         </ul>
       </div>
+      <br />
+      <br />
 
       <div className="menu-option" onClick={handleRecentlyModified}>
         <img src={IconArows} alt="Icono de flecha" />
