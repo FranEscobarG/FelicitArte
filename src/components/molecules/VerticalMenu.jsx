@@ -30,19 +30,19 @@ const StyledDiv = styled.div`
     display: flex;
     justify-content: space-between;
   }
-  .item-birthdayboy .nameB{
+  .item-birthdayboy .nameB {
     width: 50%;
     display: flex;
     align-items: center;
     /* background-color: blue; */
   }
-  .item-birthdayboy .days{
+  .item-birthdayboy .days {
     width: 45%;
     display: flex;
     align-items: center;
     gap: 5px;
   }
-  .item-birthdayboy .days img{
+  .item-birthdayboy .days img {
     width: 27%;
   }
 
@@ -74,7 +74,7 @@ const StyledDiv = styled.div`
   }
 `;
 
-function VerticalMenu({ fetchNextBirthdayBoys, nextbirthdayList, updateList}) {
+function VerticalMenu({ fetchNextBirthdayBoys, nextbirthdayList, updateList }) {
   const navigate = useNavigate();
 
   const handleRecentlyModified = () => {
@@ -135,41 +135,58 @@ function VerticalMenu({ fetchNextBirthdayBoys, nextbirthdayList, updateList}) {
       <div>
         <h3>Proximos cumpleañeros:</h3>
         <ul className="birthday_boys">
-          {nextbirthdayList.slice(0, 3).map((birthdayPerson) => {
-            // Convierte la fecha de cumpleaños a objeto de fecha
-            const birthDate = parseISO(birthdayPerson.birthDate);
-            const currentYear = new Date().getFullYear();
-            // Crea una fecha de cumpleaños para el año actual
-            const currentYearBirthday = new Date( currentYear, birthDate.getMonth(), birthDate.getDate());
-            // Calcula la diferencia en días
-            const currentDate = startOfDay(new Date());
-            let daysDifference = differenceInDays(
-              currentYearBirthday,
-              currentDate
-            );
-            // Verifica si la fecha de cumpleaños es hoy
-            const isBirthdayToday = daysDifference === 0;
-            if (daysDifference <= 0) {
-              // Si la fecha de cumpleaños de este año ya pasó, ajusta para el próximo año
-              const nextYearBirthday = new Date(
-                currentYear + 1,
+          {nextbirthdayList.map((birthdayPerson) => {
+              const birthDate = parseISO(birthdayPerson.birthDate);
+              const currentYear = new Date().getFullYear();
+              const currentYearBirthday = new Date(
+                currentYear,
                 birthDate.getMonth(),
                 birthDate.getDate()
               );
-              daysDifference = differenceInDays(nextYearBirthday, currentDate);
-            }
+              const currentDate = startOfDay(new Date());
+              let daysDifference = differenceInDays(
+                currentYearBirthday,
+                currentDate
+              );
+              const isBirthdayToday = daysDifference === 0;
+              if (daysDifference <= 0) {
+                const nextYearBirthday = new Date(
+                  currentYear + 1,
+                  birthDate.getMonth(),
+                  birthDate.getDate()
+                );
+                daysDifference = differenceInDays(
+                  nextYearBirthday,
+                  currentDate
+                );
+                if (daysDifference === 366) {
+                  daysDifference = 0; // Cambiar 366 días a "hoy"
+                }
+              }
 
-            return (
+              return {
+                birthdayPerson,
+                daysDifference,
+                isBirthdayToday,
+              };
+            })
+            .sort((a, b) => {
+              if (a.isBirthdayToday) {
+                return -1; // Asegura que los cumpleañeros de hoy estén primero
+              } else if (b.isBirthdayToday) {
+                return 1; // Asegura que los cumpleañeros de hoy estén primero
+              } else {
+                return a.daysDifference - b.daysDifference;
+              }
+            }).slice(0, 3).map(({ birthdayPerson, daysDifference }) => (
               <li className="item-birthdayboy" key={birthdayPerson.id}>
                 <div className="nameB">{birthdayPerson.fullName}</div>
                 <div className="days">
                   <img src={Timer} alt="" />{" "}
-                  {isBirthdayToday ? "hoy" : daysDifference + " días"}
+                  {daysDifference === 0 ? "hoy" : daysDifference + " días"}
                 </div>
               </li>
-            );
-          })}
-
+            ))}
         </ul>
       </div>
       <br />

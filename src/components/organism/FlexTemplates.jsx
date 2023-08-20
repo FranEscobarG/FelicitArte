@@ -9,7 +9,7 @@ import ButtonTemplate from "../atoms/ButtonTemplate";
 import IconPlus from "../../assets/img/iconPlus.svg";
 import ButtonCard from "../atoms/ButtonCard";
 import "../../assets/styles/flexTemplates.css";
-import { getAllCard,createCard } from "../../api/card";
+import { getAllCard, createCard, deleteCard } from "../../api/card";
 import globos from "../../assets/img/globos.jpg"
 
 function FlexTemplates() {
@@ -182,14 +182,43 @@ function FlexTemplates() {
     });
   };
 
-
   const handleUpdate = () => {
     console.log("Lista actualizada")
   };
 
+
+  const handleDeleteCard = async (id) => {
+    const shouldDelete = await Swal.fire({
+      title: "Confirmar eliminación",
+      text: "¿Estás seguro de que deseas eliminar esta plantilla?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (shouldDelete.isConfirmed) {
+      try {
+        await deleteCard(id);
+        getCardList();
+        Swal.fire(
+          "¡Eliminado!",
+          "La plantilla ha sido eliminada exitosamente.",
+          "success"
+        );
+      } catch (error) {
+        Swal.fire(
+          "Error",
+          "Ha ocurrido un error al eliminar la plantilla.",
+          "error"
+        );
+      }
+    }
+  };
+
   const mapeo = () => {
     let claves = Object.keys(localStorage);
-    return cardList.slice(0, 6).map((card) => <ButtonCard key={card.id} text={card.name} />);
+    return cardList.slice(0, 6).map((card) => <ButtonCard key={card.id} text={card.name} handleDeleteCard={() => handleDeleteCard(card.id)} />);
   };
 
   return (

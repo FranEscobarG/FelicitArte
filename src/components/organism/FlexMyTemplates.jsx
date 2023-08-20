@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
+import Swal from "sweetalert2";
 import { getNextBirthdayBoys } from "../../api/birthdayBoy";
-import { getAllCard } from "../../api/card";
+import { getAllCard, deleteCard } from "../../api/card";
 import VerticalMenu from "../molecules/VerticalMenu";
 import ButtonCard from "../atoms/ButtonCard";
 import "../../assets/styles/flexTemplates.css";
@@ -39,10 +40,39 @@ function FlexMyTemplates() {
   const handleUpdate = () => {
     console.log("Lista actualizada")
   };
+  
+  const handleDeleteCard = async (id) => {
+    const shouldDelete = await Swal.fire({
+      title: "Confirmar eliminación",
+      text: "¿Estás seguro de que deseas eliminar esta plantilla?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (shouldDelete.isConfirmed) {
+      try {
+        await deleteCard(id);
+        getCardList();
+        Swal.fire(
+          "¡Eliminado!",
+          "La plantilla ha sido eliminada exitosamente.",
+          "success"
+        );
+      } catch (error) {
+        Swal.fire(
+          "Error",
+          "Ha ocurrido un error al eliminar la plantilla.",
+          "error"
+        );
+      }
+    }
+  };
 
   const mapeo = () => {
     let claves = Object.keys(localStorage);
-    return cardList.map((card) => <ButtonCard key={card.id} text={card.name} />);
+    return cardList.map((card) => <ButtonCard key={card.id} text={card.name} handleDeleteCard={() => handleDeleteCard(card.id)} />);
   };
 
   return (
