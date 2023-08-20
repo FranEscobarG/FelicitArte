@@ -15,3 +15,7 @@ export const getCard = async(name) =>{
 export const updateCard = async(ID, Card) =>{
     return await axios.put(`http://localhost:4000/api/cards/${ID}`, Card);
 };
+
+export const deleteCard = async(ID) =>{
+    return await axios.delete(`http://localhost:4000/api/cards/${ID}`);
+};
