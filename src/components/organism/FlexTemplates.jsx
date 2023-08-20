@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { getNextBirthdayBoys } from "../../api/birthdayBoy";
@@ -8,13 +9,14 @@ import ButtonTemplate from "../atoms/ButtonTemplate";
 import IconPlus from "../../assets/img/iconPlus.svg";
 import ButtonCard from "../atoms/ButtonCard";
 import "../../assets/styles/flexTemplates.css";
-import { getAllCard } from "../../api/card";
+import { getAllCard,createCard } from "../../api/card";
 import globos from "../../assets/img/globos.jpg"
 
 function FlexTemplates() {
   const navigate = useNavigate();
   const [nextbirthdayList, setNextBirthdayList] = useState([]);
   const [cardList, setCardList] = useState([]);
+  const endpoint = "http://localhost:4000/api/upload";
 
   async function fetchNextBirthdayBoys() {
     try {
@@ -118,34 +120,69 @@ function FlexTemplates() {
       cancelButtonColor: "#E83E3E",
       confirmButtonText: "Enviar",
       confirmButtonColor: "#5138EE",
-      preConfirm:  () => {
-        if (
-          !document.getElementById("swal-input1").value ||
-          !document.getElementById("swal-input2").value
-        ) {
+      preConfirm: async () => {
+        if ( !document.getElementById("swal-input1").value || !document.getElementById("swal-input2").value) {
           Swal.showValidationMessage("Por favor, rellena ambos campos");
           console.log("Error datos incompletos");
         } else {
-          let claves = Object.keys(localStorage);
-          if(claves.includes(document.getElementById("swal-input1").value)){
-            Swal.fire({
-              title: "Este proyecto ya existe",
-              icon: "error",
-            });
-          }else{
-            alert("Aca ira la logica de agregar plantilla");
-            try {
-              console.log(document.getElementById("swal-input1").value);
-              console.log(document.getElementById("swal-input2").value)
-              alert("todo bien")
-            } catch (error) {
-              alert("error")
+          const imageFile = document.getElementById("swal-input2").files[0]; // Obtén la imagen seleccionada
+          const name = document.getElementById("swal-input1").value.trim();
+
+          if (imageFile) {
+            const existProject = cardList.some(
+              (project) => project.name === name
+            );
+            if (existProject) {
+              Swal.fire({
+                title: "Este proyecto ya existe",
+                icon: "error",
+              });
+            } else {
+              try {
+                const fileName = imageFile.name;
+                const newFileName = `${name}-BG-${fileName}`;
+
+                const modifiedFild = new File([imageFile], newFileName, { type: imageFile.type });
+                let formData = new FormData();  
+                formData.append("image", modifiedFild); 
+                axios({
+                  method: "POST",
+                  url: endpoint,
+                  data: formData,
+                  headers: { "Content-Type": "multipart/form-data" },
+                })
+                  .then(function (response) {
+                    console.log(response);
+                  })
+                  .catch(function (response) {
+                    console.log(response);
+                  });
+                const card = {
+                  name: name,
+                  images: "[]",
+                  canvas_data: "[]", 
+                  background: newFileName,
+                };
+
+                console.log(card);
+
+               const response = await createCard(card);
+             
+                navigate(`/projects/${name}`);
+              } catch (error) {
+                Swal.fire({
+                  title: "Error al crear la plantilla",
+                  icon: "error",
+                });
+              }
             }
           }
         }
-      }
+      },
     });
-  }
+  };
+
+
   const handleUpdate = () => {
     console.log("Lista actualizada")
   };

@@ -228,13 +228,27 @@ function FlexWorkProjects({projectName}) {
     console.log("Color de fondo del canvas:",canvasColor); 
     try {
       toast.success("Guardado exitosamente");
-      let cardObject = {
-        id: cardList.id,
-        canvas_data: canvasData,
-        images: miArreglo,
-        background: canvas.backgroundColor
+
+      if (canvasBackgroundColor.startsWith("#")){
+        console.log("Guardado cambios con color de fondo")
+        let cardObject = {
+          id: cardList.id,
+          canvas_data: canvasData,
+          images: miArreglo,
+          background: canvas.backgroundColor
+        }
+        const response = await updateCard(cardList.id, cardObject);
+      }else{
+        console.log("Guardando cambios con imagen de fondo")
+        let cardObject = {
+          id: cardList.id,
+          canvas_data: canvasData,
+          images: miArreglo,
+          background: canvasBackgroundColor
+        }
+        const response = await updateCard(cardList.id, cardObject);
       }
-      const response = await updateCard(cardList.id, cardObject);
+
     } catch (error) {
       toast.error("UPSS algo salio mal");
     }
@@ -263,15 +277,33 @@ function FlexWorkProjects({projectName}) {
         return obj;
       });
 
+
      // canvas.loadFromJSON({ objects: objectsWithImages }, canvas.renderAll.bind(canvas));     
       
+     if (canvasBackgroundColor.startsWith("#") || !canvasBackgroundColor) {
+      console.log("Estás recibiendo un color");
       canvas.loadFromJSON({ objects: objectsWithImages }, () => {
         canvas.setBackgroundColor(canvasBackgroundColor, canvas.renderAll.bind(canvas));
         canvas.renderAll();
       }); 
+    } else {
+      console.log("Estás recibiendo una imagen");
+      canvas.loadFromJSON({ objects: objectsWithImages }, () => {
+        fabric.Image.fromURL(`http://localhost:4000/${canvasBackgroundColor}`, function (img) {
+           // Configura el atributo crossorigin en "anonymous"
+           img.getElement().crossOrigin = "anonymous";
 
+           // Ajusta el tamaño de la imagen al tamaño del lienzo
+           img.scaleToWidth(canvas.width);
+           img.scaleToHeight(canvas.height);
 
+           // Establece la imagen como fondo del lienzo
+           canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+        });
+      canvas.renderAll();
+    });  
     }
+  }
   };
 
   const handleChangeCanvasBackgroundColor = (color) => {
