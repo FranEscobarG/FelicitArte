@@ -1,4 +1,4 @@
-  import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { fabric } from "fabric";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
@@ -191,14 +191,16 @@ function FlexWorkArea({ projectName }) {
   const handleSaveChanges = async () => {
     const objects = canvas.getObjects();
     const canvasData = JSON.stringify(objects);
-    console.log("Esta llegando al save el nombre de la imagen: ");
-    console.log(miArreglo);
+    const canvasPreviewDataURL = canvas.toDataURL("image/jpeg");
+
     let card = {
       name: projectName,
       canvas_data: canvasData,
       images: miArreglo,
-      background: canvas.backgroundColor
+      background: canvas.backgroundColor,
+      preview: canvasPreviewDataURL, // Add the preview image to the card object
     };
+
     try {
       const response = await createCard(card);
       toast.success("Guardado exitosamente");
