@@ -226,6 +226,7 @@ function FlexWorkProjects({projectName}) {
     console.log(miArreglo);
     const canvasColor = canvas.backgroundColor; // Obtener el color de fondo del canvas
     console.log("Color de fondo del canvas:",canvasColor); 
+    const canvasPreviewDataURL = canvas.toDataURL("image/jpeg");
     try {
       toast.success("Guardado exitosamente");
 
@@ -235,7 +236,8 @@ function FlexWorkProjects({projectName}) {
           id: cardList.id,
           canvas_data: canvasData,
           images: miArreglo,
-          background: canvas.backgroundColor
+          background: canvas.backgroundColor,
+          preview: canvasPreviewDataURL
         }
         const response = await updateCard(cardList.id, cardObject);
       }else{
@@ -244,7 +246,8 @@ function FlexWorkProjects({projectName}) {
           id: cardList.id,
           canvas_data: canvasData,
           images: miArreglo,
-          background: canvasBackgroundColor
+          background: canvasBackgroundColor,
+          preview: canvasPreviewDataURL
         }
         const response = await updateCard(cardList.id, cardObject);
       }
@@ -275,10 +278,7 @@ function FlexWorkProjects({projectName}) {
           return { ...obj, src: `http://localhost:4000/${miArreglo[index]}`,  crossOrigin: "anonymous"  };
         }
         return obj;
-      });
-
-
-     // canvas.loadFromJSON({ objects: objectsWithImages }, canvas.renderAll.bind(canvas));     
+      }); 
       
      if (canvasBackgroundColor.startsWith("#") || !canvasBackgroundColor) {
       console.log("Estás recibiendo un color");
