@@ -157,7 +157,7 @@ function FlexWorkProjects({projectName}) {
     if (canvas) {
       canvas.freeDrawingBrush.color = color;
       setCurrentColor(color);
-      setCanvasBackgroundColor(color);
+      
     }
   };
 
@@ -306,12 +306,14 @@ function FlexWorkProjects({projectName}) {
       
      if (canvasBackgroundColor.startsWith("#") || !canvasBackgroundColor) {
       console.log("Estás recibiendo un color");
+      console.log(canvasBackgroundColor);
       canvas.loadFromJSON({ objects: objectsWithImages }, () => {
         canvas.setBackgroundColor(canvasBackgroundColor, canvas.renderAll.bind(canvas));
         canvas.renderAll();
       }); 
     } else {
       console.log("Estás recibiendo una imagen");
+      console.log(canvasBackgroundColor);
       canvas.loadFromJSON({ objects: objectsWithImages }, () => {
         fabric.Image.fromURL(`http://localhost:4000/${canvasBackgroundColor}`, function (img) {
            // Configura el atributo crossorigin en "anonymous"

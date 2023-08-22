@@ -28,6 +28,12 @@ function FlexWorkArea({ projectName }) {
 
   useEffect(() => {
     if (canvas) {
+      canvas.setBackgroundColor("#ffffff", canvas.renderAll.bind(canvas));
+    }
+  }, [canvas]);
+
+  useEffect(() => {
+    if (canvas) {
       canvas.isDrawingMode = false;
       canvas.freeDrawingBrush.width = currentLineWidth;
     }
@@ -128,7 +134,6 @@ function FlexWorkArea({ projectName }) {
     if (canvas) {
       canvas.freeDrawingBrush.color = color;
       setCurrentColor(color);
-      setCanvasBackgroundColor(color);
     }
   };
 
