@@ -71,8 +71,7 @@ function FlexMyTemplates() {
   };
 
   const mapeo = () => {
-    let claves = Object.keys(localStorage);
-    return cardList.map((card) => <ButtonCard key={card.id} text={card.name} preview={card.preview} handleDeleteCard={() => handleDeleteCard(card.id)} />);
+    return cardList.map((card) => <ButtonCard key={card.id} text={card.name} preview={`http://localhost:4000/${card.preview}`} handleDeleteCard={() => handleDeleteCard(card.id)} />);
   };
 
   return (

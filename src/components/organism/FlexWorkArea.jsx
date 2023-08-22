@@ -193,12 +193,34 @@ function FlexWorkArea({ projectName }) {
     const canvasData = JSON.stringify(objects);
     const canvasPreviewDataURL = canvas.toDataURL("image/jpeg");
 
+    const imageDataBlob = await fetch(canvasPreviewDataURL).then(response => response.blob());
+
+    const newName = `${projectName}-preview.jpg`
+
+    const modifiedFild = new File([imageDataBlob], newName, { type: "image/jpeg" });
+
+
+    let formData = new FormData();
+    formData.append("image", modifiedFild);
+    axios({
+      method: "POST",
+      url: endpoint,
+      data: formData,
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
+      
     let card = {
       name: projectName,
       canvas_data: canvasData,
       images: miArreglo,
       background: canvas.backgroundColor,
-      preview: canvasPreviewDataURL, // Add the preview image to the card object
+      preview: newName, // Add the preview image to the card object
     };
 
     try {
