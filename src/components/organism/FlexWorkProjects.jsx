@@ -227,6 +227,30 @@ function FlexWorkProjects({projectName}) {
     const canvasColor = canvas.backgroundColor; // Obtener el color de fondo del canvas
     console.log("Color de fondo del canvas:",canvasColor); 
     const canvasPreviewDataURL = canvas.toDataURL("image/jpeg");
+
+    const imageDataBlob = await fetch(canvasPreviewDataURL).then(response => response.blob());
+
+    const newName = `${projectName}-preview.jpg`
+
+    const modifiedFild = new File([imageDataBlob], newName, { type: "image/jpeg" });
+
+
+    let formData = new FormData();
+    formData.append("image", modifiedFild);
+    axios({
+      method: "POST",
+      url: endpoint,
+      data: formData,
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
+
+
     try {
       toast.success("Guardado exitosamente");
 
@@ -237,7 +261,7 @@ function FlexWorkProjects({projectName}) {
           canvas_data: canvasData,
           images: miArreglo,
           background: canvas.backgroundColor,
-          preview: canvasPreviewDataURL
+          preview: newName
         }
         const response = await updateCard(cardList.id, cardObject);
       }else{
@@ -247,7 +271,7 @@ function FlexWorkProjects({projectName}) {
           canvas_data: canvasData,
           images: miArreglo,
           background: canvasBackgroundColor,
-          preview: canvasPreviewDataURL
+          preview: newName
         }
         const response = await updateCard(cardList.id, cardObject);
       }
