@@ -162,12 +162,10 @@ function FlexTemplates() {
                   images: "[]",
                   canvas_data: "[]", 
                   background: newFileName,
+                  preview: "",
                 };
-
                 console.log(card);
-
                const response = await createCard(card);
-             
                 navigate(`/projects/${name}`);
               } catch (error) {
                 Swal.fire({
